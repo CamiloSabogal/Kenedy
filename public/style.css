@@ -1,0 +1,747 @@
+/* =========================================
+   CONFIGURACIÓN GENERAL
+========================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+
+body {
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background: #0b1220;
+
+    color: #ffffff;
+
+}
+
+
+/* =========================================
+   ENCABEZADO
+========================================= */
+
+.encabezado {
+
+    height: 66px;
+
+    background: #111827;
+
+    border-bottom:
+        1px solid #26334d;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding:
+        0 28px;
+
+}
+
+
+.titulo-principal {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+}
+
+
+.icono-titulo {
+
+    font-size: 24px;
+
+}
+
+
+.titulo-principal h1 {
+
+    margin: 0;
+
+    font-size: 21px;
+
+    font-weight: 700;
+
+}
+
+
+.titulo-principal p {
+
+    margin: 3px 0 0;
+
+    color: #8ea0bf;
+
+    font-size: 12px;
+
+}
+
+
+.estado-sistema {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    font-size: 13px;
+
+    color: #d7e2f4;
+
+}
+
+
+.punto-verde {
+
+    width: 9px;
+
+    height: 9px;
+
+    border-radius: 50%;
+
+    background: #22c55e;
+
+    display: inline-block;
+
+}
+
+
+/* =========================================
+   CONTENIDO
+========================================= */
+
+.contenido {
+
+    width: 100%;
+
+    max-width: 1120px;
+
+    margin: 26px auto;
+
+    padding:
+        0 20px
+        30px;
+
+}
+
+
+/* =========================================
+   VIDEOS
+========================================= */
+
+.contenedor-videos {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 18px;
+
+}
+
+
+.tarjeta-video {
+
+    background: #111827;
+
+    border:
+        1px solid #2b3a55;
+
+    border-radius: 13px;
+
+    overflow: hidden;
+
+}
+
+
+.cabecera-video {
+
+    height: 44px;
+
+    display: flex;
+
+    align-items: center;
+
+    padding:
+        0 15px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+}
+
+
+.cabecera-video span {
+
+    background: #020617;
+
+    padding:
+        8px 12px;
+
+    border-radius: 7px;
+
+}
+
+
+/* =========================================
+   ÁREA DEL VIDEO
+========================================= */
+
+.area-video {
+
+    position: relative;
+
+    width: 100%;
+
+    height: 360px;
+
+    background: #020617;
+
+    overflow: hidden;
+
+}
+
+
+.area-video video {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+
+}
+
+
+.mensaje-video {
+
+    position: absolute;
+
+    inset: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 12px;
+
+    color: #7284a4;
+
+    font-size: 14px;
+
+    pointer-events: none;
+
+}
+
+
+.icono-camara {
+
+    font-size: 45px;
+
+    opacity: 0.8;
+
+}
+
+
+.nombre-video {
+
+    position: absolute;
+
+    left: 13px;
+
+    bottom: 12px;
+
+    padding:
+        7px 10px;
+
+    background:
+        rgba(0, 0, 0, 0.65);
+
+    border-radius: 6px;
+
+    font-size: 12px;
+
+}
+
+
+/* =========================================
+   CONTROLES PRINCIPALES
+========================================= */
+
+.controles-principales {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 13px;
+
+    margin-top: 22px;
+
+}
+
+
+/* =========================================
+   BOTONES
+========================================= */
+
+.btn {
+
+    border: none;
+
+    border-radius: 8px;
+
+    padding:
+        12px 20px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        0.2s ease;
+
+}
+
+
+.btn:hover:not(:disabled) {
+
+    transform:
+        translateY(-1px);
+
+    filter:
+        brightness(1.08);
+
+}
+
+
+.btn-dispositivos {
+
+    background: #334155;
+
+    color: white;
+
+}
+
+
+.btn-llamar {
+
+    background: #2563eb;
+
+    color: white;
+
+}
+
+
+.btn-finalizar {
+
+    background: #dc2626;
+
+    color: white;
+
+}
+
+
+.btn:disabled {
+
+    opacity: 0.40;
+
+    cursor: not-allowed;
+
+    filter:
+        grayscale(60%);
+
+    transform: none;
+
+}
+
+
+/* =========================================
+   CONTROLES DE LLAMADA
+========================================= */
+
+.controles-llamada {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin-top: 13px;
+
+}
+
+
+.btn-control {
+
+    background: #1e293b;
+
+    color: white;
+
+    border:
+        1px solid #334155;
+
+    min-width: 145px;
+
+}
+
+
+/* =========================================
+   PANEL DE ESTADO
+========================================= */
+
+.panel-estado {
+
+    margin-top: 22px;
+
+    padding:
+        17px 19px;
+
+    background: #111827;
+
+    border:
+        1px solid #2b3a55;
+
+    border-radius: 12px;
+
+}
+
+
+.panel-estado h2 {
+
+    margin:
+        0 0 10px;
+
+    font-size: 16px;
+
+}
+
+
+.panel-estado p {
+
+    margin: 0;
+
+    color: #9eb0cf;
+
+    font-size: 13px;
+
+}
+
+
+.punto-estado {
+
+    display: inline-block;
+
+    width: 9px;
+
+    height: 9px;
+
+    margin-right: 6px;
+
+    border-radius: 50%;
+
+    background: #22c55e;
+
+}
+
+
+/* =========================================
+   ESTADOS
+========================================= */
+
+.estado-disponible {
+
+    color: #60a5fa !important;
+
+}
+
+
+.estado-conectando {
+
+    color: #fbbf24 !important;
+
+}
+
+
+.estado-llamada {
+
+    color: #4ade80 !important;
+
+}
+
+
+.estado-finalizada {
+
+    color: #94a3b8 !important;
+
+}
+
+
+.estado-error {
+
+    color: #f87171 !important;
+
+}
+
+
+/* =========================================
+   PANEL USUARIOS
+========================================= */
+
+.panel-usuarios {
+
+    margin-top: 18px;
+
+    padding:
+        18px;
+
+    background: #111827;
+
+    border:
+        1px solid #2b3a55;
+
+    border-radius: 12px;
+
+}
+
+
+.titulo-panel {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 12px;
+
+}
+
+
+.titulo-panel h2 {
+
+    margin: 0;
+
+    font-size: 16px;
+
+}
+
+
+.lista-usuario {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    background: #0b1220;
+
+    border:
+        1px solid #1d2a40;
+
+    border-radius: 8px;
+
+    padding:
+        12px 14px;
+
+    margin-top: 8px;
+
+}
+
+
+.usuario-nombre {
+
+    font-size: 13px;
+
+    color: #e5edf9;
+
+}
+
+
+.usuario-estado {
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+}
+
+
+.estado-disponible-usuario {
+
+    color: #4ade80;
+
+}
+
+
+.estado-conectando-usuario {
+
+    color: #fbbf24;
+
+}
+
+
+.estado-ocupado-usuario {
+
+    color: #f87171;
+
+}
+
+
+.sin-usuarios {
+
+    color: #7183a3;
+
+    font-size: 13px;
+
+    margin: 0;
+
+}
+
+
+/* =========================================
+   ZONA DE PRUEBA
+========================================= */
+
+.zona-prueba {
+
+    display: flex;
+
+    justify-content: center;
+
+    margin-top: 17px;
+
+}
+
+
+.btn-prueba {
+
+    background: transparent;
+
+    color: #b8c6dc;
+
+    border:
+        1px solid #40516e;
+
+    padding:
+        8px 15px;
+
+    font-size: 12px;
+
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 800px) {
+
+    .encabezado {
+
+        height: auto;
+
+        padding:
+            15px 18px;
+
+        gap: 15px;
+
+    }
+
+
+    .contenedor-videos {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .controles-principales {
+
+        flex-wrap: wrap;
+
+    }
+
+
+    .controles-llamada {
+
+        flex-wrap: wrap;
+
+    }
+
+
+    .area-video {
+
+        height: 300px;
+
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .titulo-principal h1 {
+
+        font-size: 17px;
+
+    }
+
+
+    .estado-sistema {
+
+        display: none;
+
+    }
+
+
+    .contenido {
+
+        padding:
+            0 12px
+            25px;
+
+    }
+
+
+    .area-video {
+
+        height: 240px;
+
+    }
+
+}

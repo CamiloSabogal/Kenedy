@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Videollamada WebRTC</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+    <!-- =========================================
+         ENCABEZADO
+    ========================================== -->
+
+    <header class="encabezado">
+
+        <div class="titulo-principal">
+
+            <span class="icono-titulo">
+                📹
+            </span>
+
+            <div>
+
+                <h1>
+                    Videollamada WebRTC
+                </h1>
+
+                <p>
+                    Sistema de comunicación en tiempo real
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="estado-sistema">
+
+            <span class="punto-verde"></span>
+
+            Sistema disponible
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =========================================
+         CONTENIDO PRINCIPAL
+    ========================================== -->
+
+    <main class="contenido">
+
+
+        <!-- =====================================
+             VIDEOS
+        ====================================== -->
+
+        <section class="contenedor-videos">
+
+
+            <!-- VIDEO LOCAL -->
+
+            <div class="tarjeta-video">
+
+                <div class="cabecera-video">
+
+                    <span>
+                        Mi cámara
+                    </span>
+
+                </div>
+
+
+                <div class="area-video">
+
+                    <video
+                        id="videoLocal"
+                        autoplay
+                        muted
+                        playsinline
+                    ></video>
+
+
+                    <div
+                        id="mensajeLocal"
+                        class="mensaje-video"
+                    >
+
+                        <div class="icono-camara">
+                            📷
+                        </div>
+
+                        <span>
+                            Cámara no disponible
+                        </span>
+
+                    </div>
+
+
+                    <div class="nombre-video">
+
+                        👤 Tú
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- VIDEO REMOTO -->
+
+            <div class="tarjeta-video">
+
+                <div class="cabecera-video">
+
+                    <span>
+                        Cámara remota
+                    </span>
+
+                </div>
+
+
+                <div class="area-video">
+
+                    <video
+                        id="videoRemoto"
+                        autoplay
+                        playsinline
+                    ></video>
+
+
+                    <div
+                        id="mensajeRemoto"
+                        class="mensaje-video"
+                    >
+
+                        <div class="icono-camara">
+                            👤
+                        </div>
+
+                        <span>
+                            Esperando conexión...
+                        </span>
+
+                    </div>
+
+
+                    <div class="nombre-video">
+
+                        👥 Usuario remoto
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             CONTROLES PRINCIPALES
+        ====================================== -->
+
+        <section class="controles-principales">
+
+
+            <button
+                id="btnCamara"
+                class="btn btn-dispositivos"
+            >
+
+                🎤📷 Activar dispositivos
+
+            </button>
+
+
+            <button
+                id="btnWebRTC"
+                class="btn btn-llamar"
+            >
+
+                📞 Iniciar llamada
+
+            </button>
+
+
+            <button
+                id="btnFinalizar"
+                class="btn btn-finalizar"
+                disabled
+            >
+
+                ❌ Finalizar
+
+            </button>
+
+        </section>
+
+
+
+        <!-- =====================================
+             CONTROLES DE LLAMADA
+        ====================================== -->
+
+        <section
+            id="controlesLlamada"
+            class="controles-llamada"
+        >
+
+            <button
+                id="btnMicrofono"
+                class="btn btn-control"
+                disabled
+            >
+
+                🎤 Micrófono
+
+            </button>
+
+
+            <button
+                id="btnVideo"
+                class="btn btn-control"
+                disabled
+            >
+
+                📹 Cámara
+
+            </button>
+
+        </section>
+
+
+
+        <!-- =====================================
+             ESTADO
+        ====================================== -->
+
+        <section class="panel-estado">
+
+            <h2>
+                Estado de la conexión
+            </h2>
+
+
+            <p id="mensaje">
+
+                <span class="punto-estado"></span>
+
+                🟢 Sistema disponible.
+
+            </p>
+
+        </section>
+
+
+
+        <!-- =====================================
+             USUARIOS CONECTADOS
+        ====================================== -->
+
+        <section
+            id="panelUsuarios"
+            class="panel-usuarios"
+        >
+
+            <div class="titulo-panel">
+
+                <span>
+                    👥
+                </span>
+
+                <h2>
+                    Usuarios conectados
+                </h2>
+
+            </div>
+
+
+            <div id="listaUsuarios">
+
+                <p class="sin-usuarios">
+                    Cargando usuarios...
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             PRUEBA DE SEÑALIZACIÓN
+        ====================================== -->
+
+        <div class="zona-prueba">
+
+            <button
+                id="btnPrueba"
+                class="btn btn-prueba"
+            >
+
+                🔧 Probar señalización
+
+            </button>
+
+        </div>
+
+
+    </main>
+
+
+
+    <!-- =========================================
+         SOCKET.IO
+    ========================================== -->
+
+    <script
+        src="/socket.io/socket.io.js"
+    ></script>
+
+
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================== -->
+
+    <script
+        src="app.js"
+    ></script>
+
+</body>
+
+</html>

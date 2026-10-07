@@ -1,0 +1,21 @@
+{
+  "name": "videollamada-webrtc",
+  "version": "1.0.0",
+  "description": "Sistema de videollamada WebRTC con Socket.IO",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "webrtc",
+    "socket.io",
+    "videollamada"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.2.1",
+    "socket.io": "^4.8.4"
+  }
+}
