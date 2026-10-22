@@ -80,21 +80,39 @@ let rolLlamada = null;
 // CONFIGURACIÓN WEBRTC
 // ============================================================
 
+
 const configuracionRTC = {
-
     iceServers: [
-
-        {
-            urls: "stun:stun.l.google.com:19302"
-        },
-
-        {
-            urls: "stun:stun1.l.google.com:19302"
-        }
-
+        { urls: "stun:stun.l.google.com:19302" },
+        { urls: "stun:stun1.l.google.com:19302" }
     ]
-
 };
+
+
+async function cargarConfiguracionRTC() {
+    const respuesta = await fetch("/api/turn-servers");
+
+    if (!respuesta.ok) {
+        throw new Error(
+            "No se pudo obtener la configuración TURN."
+        );
+    }
+
+    const servidoresICE = await respuesta.json();
+
+    if (
+        !Array.isArray(servidoresICE) ||
+        servidoresICE.length === 0
+    ) {
+        throw new Error(
+            "No se recibieron servidores ICE."
+        );
+    }
+
+    configuracionRTC.iceServers = servidoresICE;
+}
+
+
 
 
 // ============================================================
@@ -1127,6 +1145,10 @@ if (btnWebRTC) {
         async () => {
 
             try {
+
+                await cargarConfiguracionRTC();
+
+                 console.log("Configuración TURN cargada correctamente.");
 
                 console.log(
                     "Iniciando llamada..."

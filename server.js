@@ -1,3 +1,6 @@
+require("dotenv").config();
+console.log("¿Se cargó la variable TURN?:", Boolean(process.env.METERED_TURN_API_KEY));
+console.log("¿Existe el archivo .env?:", require("fs").existsSync(".env"));
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
@@ -7,6 +10,44 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 app.use(express.static("public"));
+
+
+app.get("/api/turn-servers", async (req, res) => {
+    const apiKey = process.env.METERED_TURN_API_KEY;
+
+    if (!apiKey) {
+        return res.status(500).json({
+            error: "La clave TURN no está configurada en el servidor."
+        });
+    }
+
+    try {
+        const respuesta = await fetch(
+            `https://videollamada-kennedy.metered.live/api/v1/turn/credentials?apiKey=${encodeURIComponent(apiKey)}`
+        );
+
+        if (!respuesta.ok) {
+            console.error("Error consultando servidores TURN:", respuesta.status);
+
+            return res.status(502).json({
+                error: "No se pudo obtener la configuración TURN."
+            });
+        }
+
+        const servidoresICE = await respuesta.json();
+
+        res.set("Cache-Control", "no-store");
+        return res.json(servidoresICE);
+
+    } catch (error) {
+        console.error("Error al consultar Metered:", error.message);
+
+        return res.status(502).json({
+            error: "Error de conexión con el servicio TURN."
+        });
+    }
+});
+
 
 // ==========================================
 // USUARIOS CONECTADOS
