@@ -1,46 +1,152 @@
-/* =========================================
-   CONFIGURACIÓN GENERAL
-========================================= */
+/* =========================================================
+   INSTITUCIÓN EDUCATIVA JOHN F. KENNEDY
+   SISTEMA INSTITUCIONAL DE VIDEOCOMUNICACIÓN WEBRTC
+   ========================================================= */
+
+
+/* =========================================================
+   VARIABLES
+   ========================================================= */
+
+:root {
+
+    --verde: #126b3a;
+    --verde-oscuro: #084d2a;
+    --verde-medio: #198754;
+    --verde-claro: #edf8f1;
+
+    --rojo: #c62828;
+    --rojo-oscuro: #a51f1f;
+    --rojo-claro: #fff1f1;
+
+    --azul: #1769aa;
+    --azul-oscuro: #0d4f82;
+
+    --blanco: #ffffff;
+
+    --gris-50: #f7f9f8;
+    --gris-100: #f0f3f1;
+    --gris-200: #e1e7e3;
+    --gris-300: #ccd5cf;
+    --gris-500: #69756e;
+    --gris-700: #354039;
+    --gris-900: #18211c;
+
+    --video: #101914;
+
+    --sombra-suave:
+        0 4px 18px rgba(15, 43, 28, 0.07);
+
+    --sombra:
+        0 10px 30px rgba(15, 43, 28, 0.10);
+
+    --sombra-fuerte:
+        0 15px 40px rgba(15, 43, 28, 0.14);
+
+    --radio: 14px;
+}
+
+
+/* =========================================================
+   RESET GENERAL
+   ========================================================= */
 
 * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
 
-html,
-body {
-    margin: 0;
-    padding: 0;
-    min-height: 100%;
+html {
+    scroll-behavior: smooth;
 }
 
 
 body {
 
     font-family:
+        "Segoe UI",
+        Roboto,
         Arial,
         Helvetica,
         sans-serif;
 
-    background: #0b1220;
+    background:
+        linear-gradient(
+            180deg,
+            #f8faf9 0%,
+            #f4f7f5 100%
+        );
 
-    color: #ffffff;
+    color: var(--gris-900);
 
+    min-height: 100vh;
 }
 
 
-/* =========================================
-   ENCABEZADO
-========================================= */
+/* =========================================================
+   BARRA INSTITUCIONAL SUPERIOR
+   VERDE - BLANCO - ROJO
+   ========================================================= */
 
-.encabezado {
+.institutional-line {
 
-    height: 66px;
+    width: 100%;
 
-    background: #111827;
+    height: 5px;
+
+    background:
+        linear-gradient(
+            to right,
+            var(--verde) 0%,
+            var(--verde) 33.33%,
+
+            #ffffff 33.33%,
+            #ffffff 66.66%,
+
+            var(--rojo) 66.66%,
+            var(--rojo) 100%
+        );
+}
+
+
+/* =========================================================
+   CONTENEDOR GENERAL
+   ========================================================= */
+
+.container {
+
+    width: min(1320px, 94%);
+
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   ENCABEZADO INSTITUCIONAL
+   ========================================================= */
+
+header {
+
+    background:
+        rgba(255, 255, 255, 0.97);
 
     border-bottom:
-        1px solid #26334d;
+        1px solid var(--gris-200);
+
+    box-shadow:
+        0 2px 15px rgba(0, 0, 0, 0.035);
+
+    position: relative;
+
+    z-index: 10;
+}
+
+
+.header-content {
+
+    min-height: 86px;
 
     display: flex;
 
@@ -48,700 +154,1849 @@ body {
 
     justify-content: space-between;
 
-    padding:
-        0 28px;
+    gap: 30px;
 
+    padding: 12px 0;
 }
 
 
-.titulo-principal {
+/* =========================================================
+   IDENTIDAD INSTITUCIONAL
+   ========================================================= */
+
+.institution-brand {
 
     display: flex;
 
     align-items: center;
 
-    gap: 12px;
-
+    gap: 13px;
 }
 
 
-.icono-titulo {
+.logo-institucional {
 
-    font-size: 24px;
+    width: 58px;
 
+    height: 58px;
+
+    object-fit: contain;
+
+    flex-shrink: 0;
 }
 
 
-.titulo-principal h1 {
-
-    margin: 0;
-
-    font-size: 21px;
-
-    font-weight: 700;
-
-}
-
-
-.titulo-principal p {
-
-    margin: 3px 0 0;
-
-    color: #8ea0bf;
-
-    font-size: 12px;
-
-}
-
-
-.estado-sistema {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-
-    font-size: 13px;
-
-    color: #d7e2f4;
-
-}
-
-
-.punto-verde {
-
-    width: 9px;
-
-    height: 9px;
-
-    border-radius: 50%;
-
-    background: #22c55e;
-
-    display: inline-block;
-
-}
-
-
-/* =========================================
-   CONTENIDO
-========================================= */
-
-.contenido {
-
-    width: 100%;
-
-    max-width: 1120px;
-
-    margin: 26px auto;
-
-    padding:
-        0 20px
-        30px;
-
-}
-
-
-/* =========================================
-   VIDEOS
-========================================= */
-
-.contenedor-videos {
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(2, 1fr);
-
-    gap: 18px;
-
-}
-
-
-.tarjeta-video {
-
-    background: #111827;
-
-    border:
-        1px solid #2b3a55;
-
-    border-radius: 13px;
-
-    overflow: hidden;
-
-}
-
-
-.cabecera-video {
-
-    height: 44px;
-
-    display: flex;
-
-    align-items: center;
-
-    padding:
-        0 15px;
-
-    font-size: 13px;
-
-    font-weight: 600;
-
-}
-
-
-.cabecera-video span {
-
-    background: #020617;
-
-    padding:
-        8px 12px;
-
-    border-radius: 7px;
-
-}
-
-
-/* =========================================
-   ÁREA DEL VIDEO
-========================================= */
-
-.area-video {
-
-    position: relative;
-
-    width: 100%;
-
-    height: 360px;
-
-    background: #020617;
-
-    overflow: hidden;
-
-}
-
-
-.area-video video {
-
-    width: 100%;
-
-    height: 100%;
-
-    object-fit: cover;
-
-    display: block;
-
-}
-
-
-.mensaje-video {
-
-    position: absolute;
-
-    inset: 0;
+.institution-text {
 
     display: flex;
 
     flex-direction: column;
 
-    justify-content: center;
-
-    align-items: center;
-
-    gap: 12px;
-
-    color: #7284a4;
-
-    font-size: 14px;
-
-    pointer-events: none;
-
+    gap: 2px;
 }
 
 
-.icono-camara {
+.institution-name {
 
-    font-size: 45px;
+    color:
+        var(--verde-oscuro);
 
-    opacity: 0.8;
+    font-size:
+        1.12rem;
 
+    font-weight:
+        700;
+
+    letter-spacing:
+        -0.2px;
 }
 
 
-.nombre-video {
+.institution-location {
 
-    position: absolute;
+    color:
+        var(--gris-500);
 
-    left: 13px;
+    font-size:
+        0.78rem;
+}
 
-    bottom: 12px;
+
+/* =========================================================
+   INFORMACIÓN DEL SISTEMA
+   ========================================================= */
+
+.system-title {
+
+    text-align: right;
+}
+
+
+.system-title h1 {
+
+    color:
+        var(--gris-900);
+
+    font-size:
+        1rem;
+
+    font-weight:
+        700;
+}
+
+
+.system-title p {
+
+    color:
+        var(--verde);
+
+    font-size:
+        0.75rem;
+
+    font-weight:
+        600;
+
+    margin-top:
+        3px;
+}
+
+
+/* =========================================================
+   ESTADO DEL SISTEMA
+   ========================================================= */
+
+.system-status {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+    margin-top:
+        6px;
 
     padding:
-        7px 10px;
+        5px 10px;
+
+    border-radius:
+        20px;
 
     background:
-        rgba(0, 0, 0, 0.65);
+        var(--verde-claro);
 
-    border-radius: 6px;
+    border:
+        1px solid #d8ebdf;
 
-    font-size: 12px;
+    color:
+        var(--verde-oscuro);
 
+    font-size:
+        0.70rem;
+
+    font-weight:
+        600;
 }
 
 
-/* =========================================
-   CONTROLES PRINCIPALES
-========================================= */
+.system-status::before {
 
-.controles-principales {
+    content:
+        "";
 
-    display: flex;
+    width:
+        7px;
 
-    justify-content: center;
+    height:
+        7px;
 
-    align-items: center;
+    border-radius:
+        50%;
 
-    gap: 13px;
+    background:
+        #22a447;
 
-    margin-top: 22px;
-
+    box-shadow:
+        0 0 0 3px
+        rgba(34, 164, 71, 0.12);
 }
 
 
-/* =========================================
-   BOTONES
-========================================= */
+/* =========================================================
+   TÍTULO PRINCIPAL
+   ========================================================= */
 
-.btn {
-
-    border: none;
-
-    border-radius: 8px;
+.page-heading {
 
     padding:
-        12px 20px;
-
-    font-size: 14px;
-
-    font-weight: 600;
-
-    cursor: pointer;
-
-    transition:
-        0.2s ease;
-
+        27px 0 17px;
 }
 
 
-.btn:hover:not(:disabled) {
+.page-heading h2 {
+
+    color:
+        var(--verde-oscuro);
+
+    font-size:
+        1.45rem;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        -0.3px;
+}
+
+
+.page-heading p {
+
+    color:
+        var(--gris-500);
+
+    font-size:
+        0.82rem;
+
+    margin-top:
+        5px;
+}
+
+
+/* =========================================================
+   DISTRIBUCIÓN PRINCIPAL
+   ========================================================= */
+
+.main-layout {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        260px;
+
+    gap:
+        18px;
+
+    align-items:
+        start;
+}
+
+
+/* =========================================================
+   TARJETA PRINCIPAL DE VIDEOLLAMADA
+   ========================================================= */
+
+.card {
+
+    background:
+        var(--blanco);
+
+    border:
+        1px solid var(--gris-200);
+
+    border-radius:
+        var(--radio);
+
+    box-shadow:
+        var(--sombra);
+
+    overflow:
+        hidden;
+
+    transition:
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.card:hover {
+
+    box-shadow:
+        var(--sombra-fuerte);
+}
+
+
+/* =========================================================
+   CABECERA DE LA TARJETA
+   ========================================================= */
+
+.card-header {
+
+    height:
+        49px;
+
+    padding:
+        0 16px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    border-bottom:
+        1px solid var(--gris-200);
+}
+
+
+.card-header h3 {
+
+    font-size:
+        0.84rem;
+
+    font-weight:
+        700;
+
+    color:
+        var(--gris-900);
+}
+
+
+.card-header span {
+
+    color:
+        var(--gris-500);
+
+    font-size:
+        0.68rem;
+
+    font-weight:
+        500;
+}
+
+
+/* =========================================================
+   CONTENEDOR DE VIDEOS
+   ========================================================= */
+
+.videos-container {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:
+        12px;
+
+    padding:
+        12px;
+}
+
+
+/* =========================================================
+   TARJETA DE VIDEO
+   ========================================================= */
+
+.video-card {
+
+    position:
+        relative;
+
+    background:
+        var(--video);
+
+    border-radius:
+        12px;
+
+    overflow:
+        hidden;
+
+    min-height:
+        340px;
+
+    border:
+        1px solid rgba(255,255,255,0.06);
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,0.16);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.video-card:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 12px 30px rgba(0,0,0,0.20);
+}
+
+
+/* =========================================================
+   VIDEO
+   ========================================================= */
+
+.video-card video {
+
+    display:
+        block;
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    min-height:
+        340px;
+
+    object-fit:
+        cover;
+
+    background:
+        var(--video);
+}
+
+
+/* =========================================================
+   ETIQUETAS DE LOS VIDEOS
+   ========================================================= */
+
+.video-label {
+
+    position:
+        absolute;
+
+    left:
+        13px;
+
+    top:
+        13px;
+
+    z-index:
+        5;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+    padding:
+        7px 11px;
+
+    border-radius:
+        7px;
+
+    background:
+        rgba(10, 15, 12, 0.78);
+
+    color:
+        white;
+
+    font-size:
+        0.70rem;
+
+    font-weight:
+        600;
+
+    backdrop-filter:
+        blur(10px);
+
+    box-shadow:
+        0 3px 10px rgba(0,0,0,0.20);
+}
+
+
+.video-label.local {
+
+    border-left:
+        3px solid var(--verde-medio);
+}
+
+
+.video-label.remote {
+
+    border-left:
+        3px solid var(--rojo);
+}
+
+
+/* =========================================================
+   MENSAJE DE VIDEO
+   ========================================================= */
+
+.video-message {
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    text-align:
+        center;
+
+    color:
+        #dce5df;
+
+    font-size:
+        0.78rem;
+
+    pointer-events:
+        none;
+}
+
+
+.video-message > div {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+}
+
+
+/* =========================================================
+   CONTROLES PRINCIPALES
+   ========================================================= */
+
+.controls {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    flex-wrap:
+        wrap;
+
+    gap:
+        8px;
+
+    padding:
+        14px;
+
+    border-top:
+        1px solid var(--gris-200);
+
+    background:
+        #ffffff;
+}
+
+
+/* =========================================================
+   BOTONES GENERALES
+   ========================================================= */
+
+button {
+
+    border:
+        none;
+
+    border-radius:
+        8px;
+
+    padding:
+        9px 13px;
+
+    font-family:
+        inherit;
+
+    font-size:
+        0.72rem;
+
+    font-weight:
+        600;
+
+    cursor:
+        pointer;
+
+    transition:
+        all 0.18s ease;
+}
+
+
+button:hover:not(:disabled) {
 
     transform:
         translateY(-1px);
 
-    filter:
-        brightness(1.08);
-
+    box-shadow:
+        0 5px 12px rgba(0,0,0,0.10);
 }
 
 
-.btn-dispositivos {
+button:active:not(:disabled) {
 
-    background: #334155;
-
-    color: white;
-
+    transform:
+        translateY(0);
 }
 
 
-.btn-llamar {
+button:disabled {
 
-    background: #2563eb;
+    opacity:
+        0.42;
 
-    color: white;
+    cursor:
+        not-allowed;
 
+    box-shadow:
+        none;
 }
 
 
-.btn-finalizar {
+/* =========================================================
+   BOTÓN ACTIVAR DISPOSITIVOS
+   ========================================================= */
 
-    background: #dc2626;
+#btnCamara {
 
-    color: white;
+    background:
+        var(--azul);
 
+    color:
+        white;
 }
 
 
-.btn:disabled {
+#btnCamara:hover:not(:disabled) {
 
-    opacity: 0.40;
-
-    cursor: not-allowed;
-
-    filter:
-        grayscale(60%);
-
-    transform: none;
-
+    background:
+        var(--azul-oscuro);
 }
 
 
-/* =========================================
-   CONTROLES DE LLAMADA
-========================================= */
+/* =========================================================
+   BOTÓN INICIAR LLAMADA
+   ========================================================= */
 
-.controles-llamada {
+#btnWebRTC {
 
-    display: flex;
+    background:
+        var(--verde);
 
-    justify-content: center;
-
-    align-items: center;
-
-    gap: 12px;
-
-    margin-top: 13px;
-
+    color:
+        white;
 }
 
 
-.btn-control {
+#btnWebRTC:hover:not(:disabled) {
 
-    background: #1e293b;
+    background:
+        var(--verde-oscuro);
+}
 
-    color: white;
+
+/* =========================================================
+   BOTÓN FINALIZAR
+   ========================================================= */
+
+#btnFinalizar {
+
+    background:
+        var(--rojo);
+
+    color:
+        white;
+}
+
+
+#btnFinalizar:hover:not(:disabled) {
+
+    background:
+        var(--rojo-oscuro);
+}
+
+
+/* =========================================================
+   MICRÓFONO Y CÁMARA
+   ========================================================= */
+
+#btnMicrofono,
+#btnVideo {
+
+    background:
+        #f7f9f8;
+
+    color:
+        var(--gris-700);
 
     border:
-        1px solid #334155;
-
-    min-width: 145px;
-
+        1px solid var(--gris-200);
 }
 
 
-/* =========================================
-   PANEL DE ESTADO
-========================================= */
+#btnMicrofono:hover:not(:disabled),
+#btnVideo:hover:not(:disabled) {
 
-.panel-estado {
-
-    margin-top: 22px;
-
-    padding:
-        17px 19px;
-
-    background: #111827;
-
-    border:
-        1px solid #2b3a55;
-
-    border-radius: 12px;
-
+    background:
+        var(--gris-100);
 }
 
 
-.panel-estado h2 {
+/* =========================================================
+   ESTADO DE LA CONEXIÓN
+   ========================================================= */
+
+#mensaje {
 
     margin:
-        0 0 10px;
+        0 12px 12px;
 
-    font-size: 16px;
+    padding:
+        10px 12px;
 
+    background:
+        var(--gris-100);
+
+    border:
+        1px solid var(--gris-200);
+
+    border-radius:
+        8px;
+
+    color:
+        var(--gris-700);
+
+    font-size:
+        0.72rem;
+
+    line-height:
+        1.4;
 }
 
 
-.panel-estado p {
+/* =========================================================
+   PANEL DE USUARIOS
+   ========================================================= */
 
-    margin: 0;
+.users-panel {
 
-    color: #9eb0cf;
+    background:
+        var(--blanco);
 
-    font-size: 13px;
+    border:
+        1px solid var(--gris-200);
 
+    border-radius:
+        var(--radio);
+
+    box-shadow:
+        var(--sombra);
+
+    overflow:
+        hidden;
+
+    transition:
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
 }
 
 
-.punto-estado {
+.users-panel:hover {
 
-    display: inline-block;
-
-    width: 9px;
-
-    height: 9px;
-
-    margin-right: 6px;
-
-    border-radius: 50%;
-
-    background: #22c55e;
-
+    box-shadow:
+        var(--sombra-fuerte);
 }
 
 
-/* =========================================
-   ESTADOS
-========================================= */
+.users-header {
 
-.estado-disponible {
+    padding:
+        15px;
 
-    color: #60a5fa !important;
-
+    border-bottom:
+        1px solid var(--gris-200);
 }
 
 
-.estado-conectando {
+.users-header h3 {
 
-    color: #fbbf24 !important;
+    color:
+        var(--verde-oscuro);
 
+    font-size:
+        0.84rem;
+
+    font-weight:
+        700;
 }
 
 
-.estado-llamada {
+.users-header p {
 
-    color: #4ade80 !important;
+    color:
+        var(--gris-500);
 
+    font-size:
+        0.68rem;
+
+    margin-top:
+        4px;
+
+    line-height:
+        1.4;
 }
 
 
-.estado-finalizada {
+/* =========================================================
+   LISTA DE USUARIOS
+   ========================================================= */
 
-    color: #94a3b8 !important;
+#listaUsuarios {
 
+    list-style:
+        none;
+
+    padding:
+        8px;
 }
 
 
-.estado-error {
+#listaUsuarios li {
 
-    color: #f87171 !important;
+    display:
+        flex;
 
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    padding:
+        9px;
+
+    margin-bottom:
+        5px;
+
+    border-radius:
+        7px;
+
+    background:
+        var(--gris-50);
+
+    border:
+        1px solid var(--gris-200);
+
+    color:
+        var(--gris-700);
+
+    font-size:
+        0.72rem;
+
+    transition:
+        background 0.18s ease,
+        border-color 0.18s ease;
 }
 
 
-/* =========================================
-   PANEL USUARIOS
-========================================= */
+#listaUsuarios li:hover {
 
-.panel-usuarios {
+    background:
+        var(--verde-claro);
 
-    margin-top: 18px;
+    border-color:
+        #d3e8da;
+}
+
+
+#listaUsuarios li::before {
+
+    content:
+        "";
+
+    width:
+        7px;
+
+    height:
+        7px;
+
+    flex-shrink:
+        0;
+
+    border-radius:
+        50%;
+
+    background:
+        #22a447;
+
+    box-shadow:
+        0 0 0 3px rgba(34,164,71,0.10);
+}
+
+
+#listaUsuarios li:last-child {
+
+    margin-bottom:
+        0;
+}
+
+
+/* =========================================================
+   INFORMACIÓN INSTITUCIONAL
+   ========================================================= */
+
+.institution-info {
+
+    margin-top:
+        18px;
+
+    padding:
+        14px 16px;
+
+    background:
+        var(--verde-claro);
+
+    border:
+        1px solid #d4e9db;
+
+    border-left:
+        4px solid var(--verde);
+
+    border-radius:
+        10px;
+}
+
+
+.institution-info h3 {
+
+    color:
+        var(--verde-oscuro);
+
+    font-size:
+        0.80rem;
+}
+
+
+.institution-info p {
+
+    margin-top:
+        4px;
+
+    color:
+        var(--gris-700);
+
+    font-size:
+        0.70rem;
+
+    line-height:
+        1.45;
+}
+
+
+/* =========================================================
+   ZONA TÉCNICA
+   ========================================================= */
+
+.zona-tecnica {
+
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    margin:
+        18px 0 28px;
+}
+
+
+#btnPrueba {
+
+    background:
+        white;
+
+    color:
+        var(--gris-500);
+
+    border:
+        1px solid var(--gris-300);
+
+    font-size:
+        0.68rem;
+
+    opacity:
+        0.78;
+}
+
+
+#btnPrueba:hover:not(:disabled) {
+
+    background:
+        var(--gris-100);
+
+    opacity:
+        1;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+footer {
+
+    margin-top:
+        28px;
 
     padding:
         18px;
 
-    background: #111827;
+    background:
+        var(--verde-oscuro);
 
-    border:
-        1px solid #2b3a55;
+    color:
+        rgba(255,255,255,0.78);
 
-    border-radius: 12px;
+    text-align:
+        center;
 
+    font-size:
+        0.68rem;
+
+    line-height:
+        1.6;
 }
 
 
-.titulo-panel {
+footer strong {
 
-    display: flex;
+    color:
+        white;
+
+    font-weight:
+        700;
+}
+
+
+/* =========================================================
+   EFECTOS GENERALES
+   ========================================================= */
+
+.card,
+.users-panel,
+.institution-info {
+
+    transition:
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .main-layout {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .users-panel {
+
+        order:
+            2;
+    }
+}
+
+
+/* =========================================================
+   CELULAR
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .container {
+
+        width:
+            92%;
+    }
+
+
+    .header-content {
+
+        flex-direction:
+            column;
+
+        align-items:
+            flex-start;
+
+        gap:
+            10px;
+    }
+
+
+    .system-title {
+
+        text-align:
+            left;
+
+        width:
+            100%;
+    }
+
+
+    .videos-container {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .video-card,
+    .video-card video {
+
+        min-height:
+            240px;
+    }
+
+
+    .controls {
+
+        padding:
+            12px;
+    }
+
+
+    button {
+
+        flex:
+            1 1 45%;
+    }
+}
+
+
+/* =========================================================
+   CELULAR PEQUEÑO
+   ========================================================= */
+
+@media (max-width: 430px) {
+
+    .institution-brand {
+
+        align-items:
+            flex-start;
+    }
+
+
+    .institution-name {
+
+        font-size:
+            0.98rem;
+    }
+
+
+    .institution-location {
+
+        font-size:
+            0.72rem;
+    }
+
+
+    .logo-institucional {
+
+        width:
+            52px;
+
+        height:
+            52px;
+    }
+
+
+    .page-heading {
+
+        padding:
+            22px 0 15px;
+    }
+
+
+    .page-heading h2 {
+
+        font-size:
+            1.25rem;
+    }
+
+
+    .page-heading p {
+
+        font-size:
+            0.75rem;
+    }
+
+
+    button {
+
+        flex:
+            1 1 100%;
+
+        width:
+            100%;
+    }
+
+
+    .video-card,
+    .video-card video {
+
+        min-height:
+            210px;
+    }
+}
+
+/* =========================================================
+   MODO LLAMADA ACTIVA
+   ========================================================= */
+
+/* Indicador de llamada activa */
+
+body.llamada-activa .card {
+    box-shadow:
+        0 12px 35px rgba(15, 43, 28, 0.16);
+}
+
+
+/* La tarjeta de videollamada toma protagonismo */
+
+body.llamada-activa .video-card {
+    min-height: 390px;
+}
+
+
+body.llamada-activa .video-card video {
+    min-height: 390px;
+}
+
+
+/* Indicador visual de llamada */
+
+body.llamada-activa .card-header {
+    border-bottom-color: #d6e9dc;
+}
+
+
+body.llamada-activa .card-header::after {
+
+    content: "● LLAMADA EN CURSO";
+
+    color: var(--verde);
+
+    font-size: 0.65rem;
+
+    font-weight: 700;
+
+    letter-spacing: 0.3px;
+
+    animation: indicadorLlamada 1.8s infinite;
+}
+
+
+/* Ocultar WebRTC cuando la llamada está activa */
+
+body.llamada-activa .card-header span {
+    display: none;
+}
+
+
+/* Animación del indicador */
+
+@keyframes indicadorLlamada {
+
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.45;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+
+/* =========================================================
+   ETIQUETA ESPECIAL DURANTE LA LLAMADA
+   ========================================================= */
+
+body.llamada-activa .video-label.local {
+
+    border-left-color:
+        var(--verde);
+
+    background:
+        rgba(8, 77, 42, 0.88);
+}
+
+
+body.llamada-activa .video-label.remote {
+
+    border-left-color:
+        var(--rojo);
+
+    background:
+        rgba(120, 20, 20, 0.88);
+}
+
+
+/* =========================================================
+   CONTROLES DURANTE LA LLAMADA
+   ========================================================= */
+
+body.llamada-activa #btnMicrofono,
+body.llamada-activa #btnVideo {
+
+    opacity: 1;
+
+    background:
+        #f4f7f5;
+
+    border-color:
+        #d6e0da;
+}
+
+
+body.llamada-activa #btnFinalizar {
+
+    opacity: 1;
+
+    transform:
+        scale(1.02);
+
+    box-shadow:
+        0 5px 15px rgba(198, 40, 40, 0.20);
+}
+
+
+/* =========================================================
+   ESTADO DE CONEXIÓN DURANTE LLAMADA
+   ========================================================= */
+
+body.llamada-activa #mensaje {
+
+    background:
+        var(--verde-claro);
+
+    border-color:
+        #cfe5d6;
+
+    color:
+        var(--verde-oscuro);
+
+    font-weight:
+        600;
+}
+
+
+/* =========================================================
+   PANEL DE USUARIOS DURANTE LLAMADA
+   ========================================================= */
+
+body.llamada-activa .users-panel {
+
+    border-color:
+        #cfe5d6;
+}
+
+
+body.llamada-activa .users-header {
+
+    background:
+        #f7fbf8;
+}
+
+
+/* =========================================================
+   ESTADO CONECTANDO
+   ========================================================= */
+
+body.llamada-conectando .card {
+
+    box-shadow:
+        0 10px 30px rgba(23, 105, 170, 0.12);
+}
+
+
+body.llamada-conectando .card-header::after {
+
+    content:
+        "● CONECTANDO...";
+
+    color:
+        var(--azul);
+
+    font-size:
+        0.65rem;
+
+    font-weight:
+        700;
+
+    animation:
+        indicadorLlamada 1.2s infinite;
+}
+
+
+body.llamada-conectando .card-header span {
+
+    display:
+        none;
+}
+
+
+/* =========================================================
+   MODO NORMAL
+   ========================================================= */
+
+body:not(.llamada-activa):not(.llamada-conectando) .card-header::after {
+
+    content:
+        "";
+}
+
+
+/* =========================================================
+   RESPONSIVE LLAMADA
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    body.llamada-activa .video-card,
+    body.llamada-activa .video-card video {
+
+        min-height:
+            270px;
+    }
+
+}
+
+/* =========================================================
+   MODAL DE LLAMADA ENTRANTE
+   ========================================================= */
+
+.modal-llamada {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9999;
+
+    display: none;
 
     align-items: center;
-
-    gap: 8px;
-
-    margin-bottom: 12px;
-
-}
-
-
-.titulo-panel h2 {
-
-    margin: 0;
-
-    font-size: 16px;
-
-}
-
-
-.lista-usuario {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    background: #0b1220;
-
-    border:
-        1px solid #1d2a40;
-
-    border-radius: 8px;
-
-    padding:
-        12px 14px;
-
-    margin-top: 8px;
-
-}
-
-
-.usuario-nombre {
-
-    font-size: 13px;
-
-    color: #e5edf9;
-
-}
-
-
-.usuario-estado {
-
-    font-size: 12px;
-
-    font-weight: 600;
-
-}
-
-
-.estado-disponible-usuario {
-
-    color: #4ade80;
-
-}
-
-
-.estado-conectando-usuario {
-
-    color: #fbbf24;
-
-}
-
-
-.estado-ocupado-usuario {
-
-    color: #f87171;
-
-}
-
-
-.sin-usuarios {
-
-    color: #7183a3;
-
-    font-size: 13px;
-
-    margin: 0;
-
-}
-
-
-/* =========================================
-   ZONA DE PRUEBA
-========================================= */
-
-.zona-prueba {
-
-    display: flex;
 
     justify-content: center;
 
-    margin-top: 17px;
+    padding: 20px;
 
+    background:
+        rgba(8, 30, 18, 0.62);
+
+    backdrop-filter:
+        blur(6px);
 }
 
 
-.btn-prueba {
+/* =========================================================
+   MODAL VISIBLE
+   ========================================================= */
 
-    background: transparent;
+.modal-llamada.visible {
 
-    color: #b8c6dc;
+    display: flex;
 
-    border:
-        1px solid #40516e;
+    animation:
+        aparecerModal 0.25s ease;
+}
+
+
+/* =========================================================
+   CONTENEDOR
+   ========================================================= */
+
+.modal-llamada-contenido {
+
+    width:
+        min(420px, 100%);
+
+    background:
+        #ffffff;
+
+    border-radius:
+        18px;
 
     padding:
-        8px 15px;
+        32px 28px;
 
-    font-size: 12px;
+    text-align:
+        center;
+
+    box-shadow:
+        0 25px 70px
+        rgba(0, 0, 0, 0.25);
+
+    border:
+        1px solid
+        rgba(18, 107, 58, 0.12);
+
+    animation:
+        subirModal 0.3s ease;
+}
+
+
+/* =========================================================
+   ICONO
+   ========================================================= */
+
+.icono-llamada {
+
+    width:
+        72px;
+
+    height:
+        72px;
+
+    margin:
+        0 auto 18px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        50%;
+
+    background:
+        var(--verde-claro);
+
+    border:
+        6px solid
+        #e0f0e5;
+
+    font-size:
+        30px;
+
+    animation:
+        pulsoLlamada 1.5s infinite;
+}
+
+
+/* =========================================================
+   ETIQUETA
+   ========================================================= */
+
+.etiqueta-llamada {
+
+    display:
+        inline-block;
+
+    padding:
+        5px 10px;
+
+    border-radius:
+        20px;
+
+    background:
+        var(--verde-claro);
+
+    color:
+        var(--verde-oscuro);
+
+    font-size:
+        0.65rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.6px;
+}
+
+
+/* =========================================================
+   NOMBRE
+   ========================================================= */
+
+.texto-llamada h2 {
+
+    margin-top:
+        10px;
+
+    color:
+        var(--gris-900);
+
+    font-size:
+        1.35rem;
+
+    font-weight:
+        700;
+}
+
+
+/* =========================================================
+   DESCRIPCIÓN
+   ========================================================= */
+
+.texto-llamada p {
+
+    margin-top:
+        6px;
+
+    color:
+        var(--gris-500);
+
+    font-size:
+        0.78rem;
+
+    line-height:
+        1.5;
+}
+
+
+/* =========================================================
+   BOTONES
+   ========================================================= */
+
+.acciones-llamada {
+
+    display:
+        flex;
+
+    gap:
+        10px;
+
+    margin-top:
+        24px;
+}
+
+
+.acciones-llamada button {
+
+    flex:
+        1;
+
+    min-height:
+        42px;
+
+    border-radius:
+        9px;
+
+    font-family:
+        inherit;
+
+    font-size:
+        0.75rem;
+
+    font-weight:
+        700;
+
+    cursor:
+        pointer;
+
+    transition:
+        all 0.18s ease;
+}
+
+
+/* =========================================================
+   ACEPTAR
+   ========================================================= */
+
+.btn-aceptar-llamada {
+
+    background:
+        var(--verde);
+
+    color:
+        white;
+
+    border:
+        1px solid
+        var(--verde);
+}
+
+
+.btn-aceptar-llamada:hover {
+
+    background:
+        var(--verde-oscuro);
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 6px 15px
+        rgba(18, 107, 58, 0.22);
+}
+
+
+/* =========================================================
+   RECHAZAR
+   ========================================================= */
+
+.btn-rechazar-llamada {
+
+    background:
+        white;
+
+    color:
+        var(--rojo);
+
+    border:
+        1px solid
+        #e4c5c5;
+}
+
+
+.btn-rechazar-llamada:hover {
+
+    background:
+        var(--rojo-claro);
+
+    border-color:
+        var(--rojo);
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* =========================================================
+   ANIMACIONES
+   ========================================================= */
+
+@keyframes aparecerModal {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 
 }
 
 
-/* =========================================
-   RESPONSIVE
-========================================= */
+@keyframes subirModal {
 
-@media (max-width: 800px) {
+    from {
 
-    .encabezado {
+        opacity: 0;
 
-        height: auto;
-
-        padding:
-            15px 18px;
-
-        gap: 15px;
+        transform:
+            translateY(15px)
+            scale(0.97);
 
     }
 
+    to {
 
-    .contenedor-videos {
+        opacity: 1;
 
-        grid-template-columns: 1fr;
-
-    }
-
-
-    .controles-principales {
-
-        flex-wrap: wrap;
-
-    }
-
-
-    .controles-llamada {
-
-        flex-wrap: wrap;
-
-    }
-
-
-    .area-video {
-
-        height: 300px;
+        transform:
+            translateY(0)
+            scale(1);
 
     }
 
 }
 
+
+@keyframes pulsoLlamada {
+
+    0% {
+
+        box-shadow:
+            0 0 0 0
+            rgba(25, 135, 84, 0.25);
+
+    }
+
+    70% {
+
+        box-shadow:
+            0 0 0 12px
+            rgba(25, 135, 84, 0);
+
+    }
+
+    100% {
+
+        box-shadow:
+            0 0 0 0
+            rgba(25, 135, 84, 0);
+
+    }
+
+}
+
+
+/* =========================================================
+   MÓVIL
+   ========================================================= */
 
 @media (max-width: 500px) {
 
-    .titulo-principal h1 {
-
-        font-size: 17px;
-
-    }
-
-
-    .estado-sistema {
-
-        display: none;
-
-    }
-
-
-    .contenido {
+    .modal-llamada {
 
         padding:
-            0 12px
-            25px;
-
+            15px;
     }
 
 
-    .area-video {
+    .modal-llamada-contenido {
 
-        height: 240px;
+        padding:
+            28px 20px;
+    }
 
+
+    .acciones-llamada {
+
+        flex-direction:
+            column;
+    }
+
+
+    .acciones-llamada button {
+
+        width:
+            100%;
     }
 
 }

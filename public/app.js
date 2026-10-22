@@ -1,9 +1,20 @@
+// ============================================================
+// SISTEMA DE VIDEOLLAMADA WEBRTC
+// INSTITUCIÓN EDUCATIVA JOHN F. KENNEDY
+// Puerto Boyacá - Boyacá
+// ============================================================
+
+
+// ============================================================
+// CONEXIÓN CON SOCKET.IO
+// ============================================================
+
 const socket = io();
 
 
-// =====================================================
-// ELEMENTOS DEL HTML
-// =====================================================
+// ============================================================
+// ELEMENTOS DEL DOM
+// ============================================================
 
 const videoLocal =
     document.getElementById("videoLocal");
@@ -42,9 +53,9 @@ const listaUsuarios =
     document.getElementById("listaUsuarios");
 
 
-// =====================================================
-// VARIABLES
-// =====================================================
+// ============================================================
+// VARIABLES PRINCIPALES
+// ============================================================
 
 let streamLocal = null;
 
@@ -56,27 +67,29 @@ let candidatosPendientes = [];
 
 let usuariosActuales = [];
 
-let estadoLlamada =
-    "disponible";
+let estadoLlamada = "disponible";
 
-let microfonoActivo =
-    true;
+let microfonoActivo = true;
 
-let camaraActiva =
-    true;
+let camaraActiva = true;
+
+let rolLlamada = null;
 
 
-// =====================================================
+// ============================================================
 // CONFIGURACIÓN WEBRTC
-// =====================================================
+// ============================================================
 
 const configuracionRTC = {
 
     iceServers: [
 
         {
-            urls:
-                "stun:stun.l.google.com:19302"
+            urls: "stun:stun.l.google.com:19302"
+        },
+
+        {
+            urls: "stun:stun1.l.google.com:19302"
         }
 
     ]
@@ -84,329 +97,379 @@ const configuracionRTC = {
 };
 
 
-// =====================================================
-// ACTUALIZAR ESTADO
-// =====================================================
+// ============================================================
+// ACTUALIZAR ESTADO GENERAL
+// ============================================================
 
 function actualizarEstado(
     texto,
-    tipo = "disponible"
+    estado = "disponible"
 ) {
 
-    mensaje.textContent =
-        texto;
+    estadoLlamada = estado;
 
-    mensaje.className =
-        "";
+    if (mensaje) {
 
-    mensaje.classList.add(
-        `estado-${tipo}`
-    );
+        mensaje.textContent = texto;
+
+    }
+
+    actualizarModoVisual();
+
+    actualizarBotones(estado);
 
 }
 
 
-// =====================================================
-// CONTROL DE BOTONES
-// =====================================================
+// ============================================================
+// ACTUALIZAR MODO VISUAL
+// ============================================================
 
-function actualizarBotones(
-    estado
-) {
+function actualizarModoVisual() {
 
-    estadoLlamada =
-        estado;
+    const contenedor =
+        document.querySelector(".contenedor");
 
+    if (!contenedor) {
 
-    switch (estado) {
+        return;
 
-        // -----------------------------------------
-        // DISPONIBLE
-        // -----------------------------------------
+    }
 
-        case "disponible":
-
-            btnCamara.disabled =
-                false;
-
-            btnWebRTC.disabled =
-                false;
-
-            btnFinalizar.disabled =
-                true;
-
-            btnMicrofono.disabled =
-                true;
-
-            btnVideo.disabled =
-                true;
-
-            break;
+    contenedor.classList.remove(
+        "llamada-activa",
+        "llamada-conectando"
+    );
 
 
-        // -----------------------------------------
-        // CONECTANDO
-        // -----------------------------------------
+    if (
+        estadoLlamada === "conectando"
+    ) {
 
-        case "conectando":
+        contenedor.classList.add(
+            "llamada-conectando"
+        );
 
-            btnCamara.disabled =
-                true;
-
-            btnWebRTC.disabled =
-                true;
-
-            btnFinalizar.disabled =
-                false;
-
-            btnMicrofono.disabled =
-                true;
-
-            btnVideo.disabled =
-                true;
-
-            break;
+    }
 
 
-        // -----------------------------------------
-        // LLAMADA
-        // -----------------------------------------
+    if (
+        estadoLlamada === "ocupado"
+    ) {
 
-        case "llamada":
-
-            btnCamara.disabled =
-                true;
-
-            btnWebRTC.disabled =
-                true;
-
-            btnFinalizar.disabled =
-                false;
-
-            btnMicrofono.disabled =
-                false;
-
-            btnVideo.disabled =
-                false;
-
-            break;
-
-
-        // -----------------------------------------
-        // FINALIZADA
-        // -----------------------------------------
-
-        case "finalizada":
-
-            btnCamara.disabled =
-                false;
-
-            btnWebRTC.disabled =
-                false;
-
-            btnFinalizar.disabled =
-                true;
-
-            btnMicrofono.disabled =
-                true;
-
-            btnVideo.disabled =
-                true;
-
-            break;
-
-
-        // -----------------------------------------
-        // ERROR
-        // -----------------------------------------
-
-        case "error":
-
-            btnCamara.disabled =
-                false;
-
-            btnWebRTC.disabled =
-                false;
-
-            btnFinalizar.disabled =
-                true;
-
-            btnMicrofono.disabled =
-                true;
-
-            btnVideo.disabled =
-                true;
-
-            break;
+        contenedor.classList.add(
+            "llamada-activa"
+        );
 
     }
 
 }
 
 
-// =====================================================
-// MOSTRAR USUARIOS
-// =====================================================
+// ============================================================
+// ACTUALIZAR BOTONES
+// ============================================================
 
-function mostrarUsuarios(
-    usuarios
+function actualizarBotones(
+    estado
 ) {
 
-    usuariosActuales =
-        usuarios;
-
-
-    listaUsuarios.innerHTML =
-        "";
-
-
-    if (
-        !usuarios ||
-        usuarios.length === 0
-    ) {
-
-        const mensajeVacio =
-            document.createElement(
-                "p"
-            );
-
-
-        mensajeVacio.className =
-            "sin-usuarios";
-
-
-        mensajeVacio.textContent =
-            "No hay usuarios conectados.";
-
-
-        listaUsuarios.appendChild(
-            mensajeVacio
-        );
-
+    if (!btnWebRTC) {
 
         return;
 
     }
 
 
-    usuarios.forEach(
-        (usuario) => {
+    if (
+        estado === "disponible"
+    ) {
 
-            const fila =
-                document.createElement(
-                    "div"
-                );
+        btnWebRTC.disabled = false;
+
+        btnWebRTC.textContent =
+            "📞 Iniciar llamada";
+
+    }
 
 
-            fila.className =
-                "lista-usuario";
+    if (
+        estado === "conectando"
+    ) {
+
+        btnWebRTC.disabled = true;
+
+        btnWebRTC.textContent =
+            "⏳ Conectando...";
+
+    }
 
 
-            // --------------------------------------
-            // NOMBRE
-            // --------------------------------------
+    if (
+        estado === "ocupado"
+    ) {
+
+        btnWebRTC.disabled = true;
+
+        btnWebRTC.textContent =
+            "📞 Llamada en curso";
+
+    }
+
+
+    if (
+        estado === "error"
+    ) {
+
+        btnWebRTC.disabled = false;
+
+        btnWebRTC.textContent =
+            "📞 Intentar nuevamente";
+
+    }
+
+
+    if (btnFinalizar) {
+
+        btnFinalizar.disabled =
+            estado === "disponible";
+
+    }
+
+
+    if (btnMicrofono) {
+
+        btnMicrofono.disabled =
+            streamLocal === null;
+
+    }
+
+
+    if (btnVideo) {
+
+        btnVideo.disabled =
+            streamLocal === null;
+
+    }
+
+}
+
+
+// ============================================================
+// OBTENER NOMBRE DEL USUARIO
+// ============================================================
+
+function obtenerNombreUsuario(
+    usuario,
+    indice
+) {
+
+    if (
+        usuario.id === socket.id
+    ) {
+
+        return "👤 Tú";
+
+    }
+
+    return "👤 Usuario " +
+        (indice + 1);
+
+}
+
+
+// ============================================================
+// OBTENER ROL DEL USUARIO
+// ============================================================
+
+function obtenerRolUsuario(
+    usuarioId
+) {
+
+    if (
+        usuarioId === socket.id
+    ) {
+
+        return rolLlamada;
+
+    }
+
+    return null;
+
+}
+
+
+// ============================================================
+// ACTUALIZAR ETIQUETAS DE LLAMADA
+// ============================================================
+
+function actualizarEtiquetasLlamada() {
+
+    if (!mensajeLocal) {
+
+        return;
+
+    }
+
+    if (!mensajeRemoto) {
+
+        return;
+
+    }
+
+
+    if (
+        rolLlamada === "emisor"
+    ) {
+
+        mensajeLocal.textContent =
+            "Tú";
+
+        mensajeRemoto.textContent =
+            "Usuario remoto";
+
+    }
+
+
+    else if (
+        rolLlamada === "receptor"
+    ) {
+
+        mensajeLocal.textContent =
+            "Tú";
+
+        mensajeRemoto.textContent =
+            "Usuario remoto";
+
+    }
+
+
+    else {
+
+        mensajeLocal.textContent =
+            "Cámara local";
+
+        mensajeRemoto.textContent =
+            "Esperando conexión";
+
+    }
+
+}
+
+
+// ============================================================
+// MOSTRAR USUARIOS CONECTADOS
+// ============================================================
+
+function mostrarUsuarios(
+    usuarios
+) {
+
+    usuariosActuales =
+        usuarios || [];
+
+
+    if (!listaUsuarios) {
+
+        return;
+
+    }
+
+
+    listaUsuarios.innerHTML = "";
+
+
+    if (
+        usuariosActuales.length === 0
+    ) {
+
+        const elemento =
+            document.createElement("div");
+
+        elemento.className =
+            "usuario-item";
+
+        elemento.textContent =
+            "No hay usuarios conectados.";
+
+        listaUsuarios.appendChild(
+            elemento
+        );
+
+        return;
+
+    }
+
+
+    usuariosActuales.forEach(
+        (usuario, indice) => {
+
+            const elemento =
+                document.createElement("div");
+
+            elemento.className =
+                "usuario-item";
+
 
             const nombre =
-                document.createElement(
-                    "span"
+                obtenerNombreUsuario(
+                    usuario,
+                    indice
                 );
 
-
-            nombre.className =
-                "usuario-nombre";
-
-
-            if (
-                usuario.id ===
-                socket.id
-            ) {
-
-                nombre.textContent =
-                    "👤 Tú";
-
-            } else {
-
-                nombre.textContent =
-                    "👤 Usuario " +
-                    usuario.id.substring(
-                        0,
-                        6
-                    );
-
-            }
-
-
-            // --------------------------------------
-            // ESTADO
-            // --------------------------------------
 
             const estado =
-                document.createElement(
-                    "span"
-                );
+                usuario.estado ||
+                "disponible";
 
 
-            estado.className =
-                "usuario-estado";
+            let textoEstado =
+                "Disponible";
 
 
             if (
-                usuario.estado ===
-                "disponible"
+                estado === "conectando"
             ) {
 
-                estado.textContent =
-                    "🟢 Disponible";
-
-                estado.classList.add(
-                    "estado-disponible-usuario"
-                );
+                textoEstado =
+                    "Conectando...";
 
             }
 
 
-            else if (
-                usuario.estado ===
-                "conectando"
+            if (
+                estado === "ocupado"
             ) {
 
-                estado.textContent =
-                    "🟡 Conectando...";
-
-                estado.classList.add(
-                    "estado-conectando-usuario"
-                );
+                textoEstado =
+                    "En llamada";
 
             }
 
 
-            else if (
-                usuario.estado ===
-                "ocupado"
+            if (
+                usuario.id === socket.id
             ) {
 
-                estado.textContent =
-                    "🔴 Ocupado";
-
-                estado.classList.add(
-                    "estado-ocupado-usuario"
-                );
+                textoEstado =
+                    "Disponible (Tú)";
 
             }
 
 
-            fila.appendChild(
-                nombre
-            );
+            elemento.innerHTML = `
+                <span class="usuario-nombre">
+                    ${nombre}
+                </span>
 
-
-            fila.appendChild(
-                estado
-            );
+                <span class="usuario-estado">
+                    ${textoEstado}
+                </span>
+            `;
 
 
             listaUsuarios.appendChild(
-                fila
+                elemento
             );
 
         }
@@ -415,9 +478,9 @@ function mostrarUsuarios(
 }
 
 
-// =====================================================
-// CONEXIÓN AL SERVIDOR
-// =====================================================
+// ============================================================
+// CONEXIÓN DEL SOCKET
+// ============================================================
 
 socket.on(
     "connect",
@@ -430,12 +493,7 @@ socket.on(
 
 
         actualizarEstado(
-            "🟢 Sistema disponible.",
-            "disponible"
-        );
-
-
-        actualizarBotones(
+            "🟢 Sistema disponible",
             "disponible"
         );
 
@@ -448,9 +506,9 @@ socket.on(
 );
 
 
-// =====================================================
+// ============================================================
 // USUARIOS CONECTADOS
-// =====================================================
+// ============================================================
 
 socket.on(
     "usuarios-conectados",
@@ -461,7 +519,6 @@ socket.on(
             usuarios
         );
 
-
         mostrarUsuarios(
             usuarios
         );
@@ -470,14 +527,19 @@ socket.on(
 );
 
 
-// =====================================================
+// ============================================================
 // LISTA DE USUARIOS
-// =====================================================
+// ============================================================
 
 socket.on(
     "lista-usuarios",
     (usuarios) => {
 
+        console.log(
+            "Lista de usuarios:",
+            usuarios
+        );
+
         mostrarUsuarios(
             usuarios
         );
@@ -485,11 +547,20 @@ socket.on(
     }
 );
 
+
+// ============================================================
+// USUARIOS ACTUALES
+// ============================================================
 
 socket.on(
     "usuarios-actuales",
     (usuarios) => {
 
+        console.log(
+            "Usuarios actuales:",
+            usuarios
+        );
+
         mostrarUsuarios(
             usuarios
         );
@@ -498,31 +569,29 @@ socket.on(
 );
 
 
-// =====================================================
-// DESCONEXIÓN
-// =====================================================
+// ============================================================
+// USUARIO DESCONECTADO
+// ============================================================
 
 socket.on(
-    "disconnect",
-    () => {
+    "usuario-desconectado",
+    (usuarioId) => {
 
-        actualizarEstado(
-            "🔴 Desconectado del servidor.",
-            "error"
+        console.log(
+            "Usuario desconectado:",
+            usuarioId
         );
 
-
-        actualizarBotones(
-            "error"
+        socket.emit(
+            "solicitar-usuarios"
         );
 
     }
 );
 
-
-// =====================================================
+// ============================================================
 // CREAR CONEXIÓN WEBRTC
-// =====================================================
+// ============================================================
 
 function crearConexion() {
 
@@ -537,9 +606,9 @@ function crearConexion() {
         );
 
 
-    // =================================================
+    // ========================================================
     // RECIBIR STREAM REMOTO
-    // =================================================
+    // ========================================================
 
     peerConnection.ontrack =
         (event) => {
@@ -549,19 +618,48 @@ function crearConexion() {
             );
 
 
-            videoRemoto.srcObject =
-                event.streams[0];
+            if (
+                event.streams &&
+                event.streams[0]
+            ) {
+
+                videoRemoto.srcObject =
+                    event.streams[0];
+
+            }
+
+            else {
+
+                if (
+                    !videoRemoto.srcObject
+                ) {
+
+                    videoRemoto.srcObject =
+                        new MediaStream();
+
+                }
 
 
-            mensajeRemoto.style.display =
-                "none";
+                videoRemoto.srcObject.addTrack(
+                    event.track
+                );
+
+            }
+
+
+            if (mensajeRemoto) {
+
+                mensajeRemoto.textContent =
+                    "Usuario remoto conectado";
+
+            }
 
         };
 
 
-    // =================================================
-    // ICE CANDIDATE
-    // =================================================
+    // ========================================================
+    // ENVIAR CANDIDATOS ICE
+    // ========================================================
 
     peerConnection.onicecandidate =
         (event) => {
@@ -570,6 +668,11 @@ function crearConexion() {
                 event.candidate &&
                 usuarioRemoto
             ) {
+
+                console.log(
+                    "Enviando candidato ICE..."
+                );
+
 
                 socket.emit(
                     "ice-candidate",
@@ -589,15 +692,16 @@ function crearConexion() {
         };
 
 
-    // =================================================
-    // ESTADO DE CONEXIÓN
-    // =================================================
+    // ========================================================
+    // ESTADO DE CONEXIÓN WEBRTC
+    // ========================================================
 
     peerConnection.onconnectionstatechange =
         () => {
 
             const estado =
-                peerConnection.connectionState;
+                peerConnection
+                    .connectionState;
 
 
             console.log(
@@ -606,89 +710,79 @@ function crearConexion() {
             );
 
 
-            // -----------------------------------------
-            // CONECTANDO
-            // -----------------------------------------
-
             if (
-                estado ===
-                "connecting"
+                estado === "connecting"
             ) {
 
                 actualizarEstado(
-                    "🟡 Conectando con el otro usuario...",
-                    "conectando"
-                );
-
-
-                actualizarBotones(
+                    "🟡 Estableciendo conexión...",
                     "conectando"
                 );
 
             }
 
 
-            // -----------------------------------------
-            // CONECTADO
-            // -----------------------------------------
+            if (
+    estado === "connected"
+) {
+
+    console.log(
+        "🟢 WEBRTC CONECTADO CORRECTAMENTE"
+    );
+
+    estadoLlamada =
+        "ocupado";
+
+    actualizarEstado(
+        "🟢 Llamada conectada",
+        "ocupado"
+    );
+
+    actualizarBotones(
+        "ocupado"
+    );
+
+    actualizarEtiquetasLlamada();
+
+}
+
 
             if (
-                estado ===
-                "connected"
+                estado === "disconnected"
             ) {
 
                 actualizarEstado(
-                    "🟢 Llamada conectada correctamente.",
-                    "llamada"
-                );
-
-
-                actualizarBotones(
-                    "llamada"
+                    "🟠 Conexión interrumpida.",
+                    "conectando"
                 );
 
             }
 
 
-            // -----------------------------------------
-            // DESCONECTADO
-            // -----------------------------------------
-
             if (
-                estado ===
-                "disconnected"
+                estado === "failed"
             ) {
 
-                actualizarEstado(
-                    "🔴 Conexión perdida.",
-                    "error"
+                console.error(
+                    "La conexión WebRTC falló."
                 );
 
 
-                actualizarBotones(
+                actualizarEstado(
+                    "🔴 No fue posible establecer la conexión.",
                     "error"
                 );
 
             }
 
 
-            // -----------------------------------------
-            // FALLA
-            // -----------------------------------------
-
             if (
-                estado ===
-                "failed"
+                estado === "closed"
             ) {
 
                 actualizarEstado(
-                    "🔴 Error en la conexión WebRTC.",
-                    "error"
-                );
-
-
-                actualizarBotones(
-                    "error"
+                    "🟢 Sistema disponible",
+                    "disponible"
                 );
 
             }
@@ -696,27 +790,88 @@ function crearConexion() {
         };
 
 
-    // =================================================
-    // ICE CONNECTION
-    // =================================================
+    // ========================================================
+    // ESTADO ICE
+    // ========================================================
 
     peerConnection.oniceconnectionstatechange =
         () => {
 
+            const estadoICE =
+                peerConnection
+                    .iceConnectionState;
+
+
             console.log(
                 "Estado ICE:",
-                peerConnection.iceConnectionState
+                estadoICE
             );
+
+
+            if (
+                estadoICE === "checking"
+            ) {
+
+                actualizarEstado(
+                    "🟡 Verificando conexión...",
+                    "conectando"
+                );
+
+            }
+
+
+            if (
+                estadoICE === "connected" ||
+                estadoICE === "completed"
+            ) {
+
+                console.log(
+                    "ICE conectado correctamente."
+                );
+
+            }
+
+
+            if (
+                estadoICE === "disconnected"
+            ) {
+
+                console.warn(
+                    "ICE desconectado."
+                );
+
+            }
+
+
+            if (
+                estadoICE === "failed"
+            ) {
+
+                console.error(
+                    "ICE falló."
+                );
+
+                actualizarEstado(
+                    "🔴 No se pudo establecer la conexión de red.",
+                    "error"
+                );
+
+            }
 
         };
 
 
-    // =================================================
-    // DATA CHANNEL
-    // =================================================
+    // ========================================================
+    // CANAL DE DATOS
+    // ========================================================
 
     peerConnection.ondatachannel =
         (event) => {
+
+            console.log(
+                "Canal de datos recibido."
+            );
+
 
             const canal =
                 event.channel;
@@ -733,11 +888,11 @@ function crearConexion() {
 
 
             canal.onmessage =
-                (event) => {
+                (mensajeRecibido) => {
 
                     console.log(
                         "Mensaje recibido:",
-                        event.data
+                        mensajeRecibido.data
                     );
 
                 };
@@ -750,69 +905,49 @@ function crearConexion() {
 }
 
 
-// =====================================================
-// ACTIVAR CÁMARA Y MICRÓFONO
-// =====================================================
+// ============================================================
+// PROCESAR CANDIDATOS ICE PENDIENTES
+// ============================================================
 
-btnCamara.addEventListener(
-    "click",
-    async () => {
+async function procesarCandidatosPendientes() {
+
+    if (
+        !peerConnection
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        !peerConnection.remoteDescription
+    ) {
+
+        return;
+
+    }
+
+
+    while (
+        candidatosPendientes.length > 0
+    ) {
+
+        const candidato =
+            candidatosPendientes.shift();
+
 
         try {
 
-            actualizarEstado(
-                "🟡 Solicitando acceso a cámara y micrófono...",
-                "conectando"
+            await peerConnection.addIceCandidate(
+                new RTCIceCandidate(
+                    candidato
+                )
             );
 
 
-            const stream =
-                await navigator
-                    .mediaDevices
-                    .getUserMedia({
-
-                        video: true,
-
-                        audio: true
-
-                    });
-
-
-            streamLocal =
-                stream;
-
-
-            videoLocal.srcObject =
-                streamLocal;
-
-
-            mensajeLocal.style.display =
-                "none";
-
-
-            microfonoActivo =
-                true;
-
-            camaraActiva =
-                true;
-
-
-            btnMicrofono.textContent =
-                "🎤 Micrófono";
-
-
-            btnVideo.textContent =
-                "📹 Cámara";
-
-
-            actualizarEstado(
-                "🟢 Cámara y micrófono activados.",
-                "disponible"
-            );
-
-
-            actualizarBotones(
-                "disponible"
+            console.log(
+                "Candidato ICE pendiente agregado."
             );
 
         }
@@ -820,249 +955,529 @@ btnCamara.addEventListener(
         catch (error) {
 
             console.error(
-                "Error al acceder a dispositivos:",
+                "Error agregando candidato ICE:",
                 error
-            );
-
-
-            actualizarEstado(
-                "⚠️ No se pudo acceder a cámara/micrófono.",
-                "error"
-            );
-
-
-            actualizarBotones(
-                "disponible"
             );
 
         }
 
     }
-);
+
+}
 
 
-// =====================================================
-// INICIAR LLAMADA
-// =====================================================
+// ============================================================
+// ACTIVAR CÁMARA Y MICRÓFONO
+// ============================================================
 
-btnWebRTC.addEventListener(
-    "click",
-    async () => {
+if (btnCamara) {
 
-        try {
+    btnCamara.addEventListener(
+        "click",
+        async () => {
 
-            actualizarEstado(
-                "🟡 Buscando usuario disponible...",
-                "conectando"
-            );
+            try {
 
-
-            actualizarBotones(
-                "conectando"
-            );
-
-
-            const usuarios =
-                await obtenerUsuarios();
-
-
-            // -----------------------------------------
-            // BUSCAR USUARIO DISPONIBLE
-            // -----------------------------------------
-
-            const disponibles =
-                usuarios.filter(
-                    usuario =>
-
-                        usuario.id !==
-                        socket.id &&
-
-                        usuario.estado ===
-                        "disponible"
+                console.log(
+                    "Solicitando cámara y micrófono..."
                 );
 
 
-            if (
-                disponibles.length ===
-                0
-            ) {
+                if (
+                    streamLocal
+                ) {
 
-                actualizarEstado(
-                    "⚠️ No hay usuarios disponibles para llamar.",
-                    "error"
-                );
+                    console.log(
+                        "Los dispositivos ya están activos."
+                    );
 
+                    return;
 
-                actualizarBotones(
-                    "disponible"
-                );
+                }
 
 
-                return;
+                streamLocal =
+                    await navigator.mediaDevices.getUserMedia(
+                        {
 
-            }
+                            video: true,
 
-
-            usuarioRemoto =
-                disponibles[0].id;
-
-
-            console.log(
-                "Llamando a:",
-                usuarioRemoto
-            );
-
-
-            // -----------------------------------------
-            // CREAR CONEXIÓN
-            // -----------------------------------------
-
-            crearConexion();
-
-
-            // -----------------------------------------
-            // AGREGAR STREAM
-            // -----------------------------------------
-
-            if (
-                streamLocal
-            ) {
-
-                streamLocal
-                    .getTracks()
-                    .forEach(
-                        track => {
-
-                            peerConnection
-                                .addTrack(
-                                    track,
-                                    streamLocal
-                                );
+                            audio: true
 
                         }
                     );
 
-            }
 
-
-            // -----------------------------------------
-            // DATA CHANNEL
-            // -----------------------------------------
-
-            const canal =
-                peerConnection
-                    .createDataChannel(
-                        "chat"
-                    );
-
-
-            canal.onopen =
-                () => {
-
-                    console.log(
-                        "Canal de datos abierto."
-                    );
-
-                };
-
-
-            // -----------------------------------------
-            // CREAR OFFER
-            // -----------------------------------------
-
-            const offer =
-                await peerConnection
-                    .createOffer();
-
-
-            await peerConnection
-                .setLocalDescription(
-                    offer
+                console.log(
+                    "Cámara y micrófono activados."
                 );
 
 
-            // -----------------------------------------
-            // ENVIAR OFFER
-            // -----------------------------------------
+                videoLocal.srcObject =
+                    streamLocal;
 
-            socket.emit(
-                "offer",
-                {
 
-                    to:
-                        usuarioRemoto,
+                videoLocal.muted =
+                    true;
 
-                    offer:
-                        offer
+
+                if (mensajeLocal) {
+
+                    mensajeLocal.textContent =
+                        "Cámara y micrófono activos";
+
+                }
+
+
+                microfonoActivo =
+                    true;
+
+                camaraActiva =
+                    true;
+
+
+                actualizarBotones(
+                    estadoLlamada
+                );
+
+
+                actualizarEstado(
+                    "🟢 Cámara y micrófono activos",
+                    estadoLlamada
+                );
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Error al acceder a cámara/micrófono:",
+                    error
+                );
+
+
+                actualizarEstado(
+                    "🔴 No se pudo acceder a la cámara o al micrófono.",
+                    "error"
+                );
+
+
+                if (mensajeLocal) {
+
+                    mensajeLocal.textContent =
+                        "Permiso de cámara/micrófono requerido";
+
+                }
+
+            }
+
+        }
+    );
+
+}
+
+
+// ============================================================
+// FUNCIÓN PARA OBTENER USUARIOS DISPONIBLES
+// ============================================================
+
+function obtenerUsuarios() {
+
+    return new Promise(
+        (resolve) => {
+
+            socket.once(
+                "usuarios-actuales",
+                (usuarios) => {
+
+                    usuariosActuales =
+                        usuarios || [];
+
+
+                    mostrarUsuarios(
+                        usuariosActuales
+                    );
+
+
+                    resolve(
+                        usuariosActuales
+                    );
 
                 }
             );
 
 
-            actualizarEstado(
-                "🟡 Oferta enviada. Esperando respuesta...",
-                "conectando"
+            socket.emit(
+                "solicitar-usuarios"
             );
 
         }
+    );
 
-        catch (error) {
+}
 
-            console.error(
-                "Error iniciando llamada:",
-                error
-            );
+// ============================================================
+// INICIAR LLAMADA WEBRTC
+// ============================================================
+
+if (btnWebRTC) {
+
+    btnWebRTC.addEventListener(
+        "click",
+        async () => {
+
+            try {
+
+                console.log(
+                    "Iniciando llamada..."
+                );
 
 
-            actualizarEstado(
-                "🔴 Error al iniciar la llamada.",
-                "error"
-            );
+                // ====================================================
+                // VERIFICAR CÁMARA Y MICRÓFONO
+                // ====================================================
+
+                if (!streamLocal) {
+
+                    actualizarEstado(
+                        "🟡 Primero activa la cámara y el micrófono.",
+                        "error"
+                    );
+
+                    return;
+
+                }
 
 
-            actualizarBotones(
-                "disponible"
-            );
+                // ====================================================
+                // CAMBIAR ESTADO
+                // ====================================================
+
+                actualizarEstado(
+                    "🟡 Buscando un usuario disponible...",
+                    "conectando"
+                );
+
+
+                // ====================================================
+                // OBTENER USUARIOS
+                // ====================================================
+
+                const usuarios =
+                    await obtenerUsuarios();
+
+
+                console.log(
+                    "Usuarios disponibles:",
+                    usuarios
+                );
+
+
+                // ====================================================
+                // BUSCAR OTRO USUARIO
+                // ====================================================
+
+                const usuarioDisponible =
+                    usuarios.find(
+                        (usuario) => {
+
+                            return (
+                                usuario.id !== socket.id &&
+                                usuario.estado === "disponible"
+                            );
+
+                        }
+                    );
+
+
+                // ====================================================
+                // NO HAY USUARIOS
+                // ====================================================
+
+                if (!usuarioDisponible) {
+
+                    console.warn(
+                        "No se encontró otro usuario disponible."
+                    );
+
+
+                    actualizarEstado(
+                        "🟠 No hay otro usuario disponible para llamar.",
+                        "disponible"
+                    );
+
+
+                    return;
+
+                }
+
+
+                // ====================================================
+                // GUARDAR USUARIO REMOTO
+                // ====================================================
+
+                usuarioRemoto =
+                    usuarioDisponible.id;
+
+
+                rolLlamada =
+                    "emisor";
+
+
+                console.log(
+                    "Llamando a:",
+                    usuarioRemoto
+                );
+
+
+                actualizarEtiquetasLlamada();
+
+
+                // ====================================================
+                // CREAR CONEXIÓN WEBRTC
+                // ====================================================
+
+                crearConexion();
+
+
+                // ====================================================
+                // AGREGAR STREAM LOCAL
+                // ====================================================
+
+                streamLocal
+                    .getTracks()
+                    .forEach(
+                        (track) => {
+
+                            peerConnection.addTrack(
+                                track,
+                                streamLocal
+                            );
+
+                        }
+                    );
+
+
+                // ====================================================
+                // CREAR CANAL DE DATOS
+                // ====================================================
+
+                const canalDatos =
+                    peerConnection.createDataChannel(
+                        "canal-datos"
+                    );
+
+
+                canalDatos.onopen =
+                    () => {
+
+                        console.log(
+                            "Canal de datos abierto."
+                        );
+
+
+                        try {
+
+                            canalDatos.send(
+                                "Hola desde la videollamada institucional."
+                            );
+
+                        }
+
+                        catch (error) {
+
+                            console.warn(
+                                "No fue posible enviar mensaje por el canal de datos.",
+                                error
+                            );
+
+                        }
+
+                    };
+
+
+                canalDatos.onmessage =
+                    (event) => {
+
+                        console.log(
+                            "Mensaje recibido:",
+                            event.data
+                        );
+
+                    };
+
+
+                // ====================================================
+                // CREAR OFERTA
+                // ====================================================
+
+                console.log(
+                    "Creando oferta WebRTC..."
+                );
+
+
+                const offer =
+                    await peerConnection.createOffer();
+
+
+                // ====================================================
+                // ESTABLECER DESCRIPCIÓN LOCAL
+                // ====================================================
+
+                await peerConnection.setLocalDescription(
+                    offer
+                );
+
+
+                console.log(
+                    "Descripción local establecida."
+                );
+
+
+                // ====================================================
+                // ENVIAR OFERTA AL OTRO USUARIO
+                // ====================================================
+
+                socket.emit(
+                    "offer",
+                    {
+
+                        to:
+                            usuarioRemoto,
+
+                        offer:
+                            offer
+
+                    }
+                );
+
+
+                console.log(
+                    "Oferta enviada a:",
+                    usuarioRemoto
+                );
+
+
+                actualizarEstado(
+                    "🟡 Llamando... esperando respuesta.",
+                    "conectando"
+                );
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Error iniciando llamada:",
+                    error
+                );
+
+
+                actualizarEstado(
+                    "🔴 Error al iniciar la llamada.",
+                    "error"
+                );
+
+
+                actualizarBotones(
+                    "error"
+                );
+
+            }
 
         }
+    );
 
-    }
-);
+}
 
 
-// =====================================================
+// ============================================================
 // USUARIO OCUPADO
-// =====================================================
+// ============================================================
 
 socket.on(
     "usuario-ocupado",
-    () => {
+    (data) => {
 
-        console.log(
-            "El usuario está ocupado."
+        console.warn(
+            "El usuario está ocupado:",
+            data
         );
-
-
-        cerrarConexion();
 
 
         actualizarEstado(
-            "⚠️ El usuario seleccionado está ocupado.",
-            "error"
-        );
-
-
-        actualizarBotones(
+            "🟠 El usuario seleccionado está ocupado.",
             "disponible"
         );
+
+
+        usuarioRemoto =
+            null;
+
+        rolLlamada =
+            null;
+
+
+        if (
+            peerConnection
+        ) {
+
+            try {
+
+                peerConnection.close();
+
+            }
+
+            catch (error) {
+
+                console.warn(
+                    "Error cerrando conexión:",
+                    error
+                );
+
+            }
+
+            peerConnection =
+                null;
+
+        }
 
     }
 );
 
 
-// =====================================================
-// RECIBIR OFFER
-// =====================================================
+// ============================================================
+// ERROR DE SEÑALIZACIÓN
+// ============================================================
+
+socket.on(
+    "error-llamada",
+    (data) => {
+
+        console.error(
+            "Error de llamada:",
+            data
+        );
+
+
+        actualizarEstado(
+            "🔴 " +
+            (
+                data?.mensaje ||
+                "Se produjo un error durante la llamada."
+            ),
+            "error"
+        );
+
+    }
+);
+
+// ============================================================
+// RECIBIR OFERTA WEBRTC
+// ============================================================
+// El usuario receptor acepta automáticamente la llamada.
+// No se utiliza modal ni botones de aceptar/rechazar.
+// ============================================================
 
 socket.on(
     "offer",
@@ -1076,8 +1491,19 @@ socket.on(
             );
 
 
+            // ====================================================
+            // GUARDAR USUARIO REMOTO
+            // ====================================================
+
             usuarioRemoto =
                 data.from;
+
+
+            rolLlamada =
+                "receptor";
+
+
+            actualizarEtiquetasLlamada();
 
 
             actualizarEstado(
@@ -1086,76 +1512,96 @@ socket.on(
             );
 
 
-            actualizarBotones(
-                "conectando"
-            );
-
+            // ====================================================
+            // CREAR CONEXIÓN WEBRTC
+            // ====================================================
 
             crearConexion();
 
 
-            // -----------------------------------------
-            // AGREGAR STREAM
-            // -----------------------------------------
+            // ====================================================
+            // AGREGAR CÁMARA Y MICRÓFONO
+            // ====================================================
 
-            if (
-                streamLocal
-            ) {
+            if (streamLocal) {
 
                 streamLocal
                     .getTracks()
                     .forEach(
-                        track => {
+                        (track) => {
 
-                            peerConnection
-                                .addTrack(
-                                    track,
-                                    streamLocal
-                                );
+                            peerConnection.addTrack(
+                                track,
+                                streamLocal
+                            );
 
                         }
                     );
 
             }
 
+            else {
 
-            // -----------------------------------------
-            // REMOTE DESCRIPTION
-            // -----------------------------------------
-
-            await peerConnection
-                .setRemoteDescription(
-                    new RTCSessionDescription(
-                        data.offer
-                    )
+                console.warn(
+                    "El receptor no tiene cámara/micrófono activados."
                 );
 
+            }
 
-            // -----------------------------------------
-            // ICE PENDIENTES
-            // -----------------------------------------
+
+            // ====================================================
+            // ESTABLECER OFERTA REMOTA
+            // ====================================================
+
+            await peerConnection.setRemoteDescription(
+                new RTCSessionDescription(
+                    data.offer
+                )
+            );
+
+
+            console.log(
+                "Oferta remota establecida."
+            );
+
+
+            // ====================================================
+            // PROCESAR CANDIDATOS ICE PENDIENTES
+            // ====================================================
 
             await procesarCandidatosPendientes();
 
 
-            // -----------------------------------------
-            // ANSWER
-            // -----------------------------------------
+            // ====================================================
+            // CREAR RESPUESTA
+            // ====================================================
+
+            console.log(
+                "Creando respuesta WebRTC..."
+            );
+
 
             const answer =
-                await peerConnection
-                    .createAnswer();
+                await peerConnection.createAnswer();
 
 
-            await peerConnection
-                .setLocalDescription(
-                    answer
-                );
+            // ====================================================
+            // ESTABLECER DESCRIPCIÓN LOCAL
+            // ====================================================
+
+            await peerConnection.setLocalDescription(
+                answer
+            );
 
 
-            // -----------------------------------------
-            // ENVIAR ANSWER
-            // -----------------------------------------
+            console.log(
+                "Descripción local de respuesta establecida."
+            );
+
+
+            // ====================================================
+            // ENVIAR RESPUESTA AL EMISOR
+            // ====================================================
 
             socket.emit(
                 "answer",
@@ -1171,6 +1617,12 @@ socket.on(
             );
 
 
+            console.log(
+                "Respuesta enviada a:",
+                data.from
+            );
+
+
             actualizarEstado(
                 "🟡 Respuesta enviada. Conectando...",
                 "conectando"
@@ -1181,19 +1633,19 @@ socket.on(
         catch (error) {
 
             console.error(
-                "Error aceptando llamada:",
+                "Error aceptando automáticamente la llamada:",
                 error
             );
 
 
             actualizarEstado(
-                "🔴 Error aceptando la llamada.",
+                "🔴 Error al aceptar la llamada.",
                 "error"
             );
 
 
             actualizarBotones(
-                "disponible"
+                "error"
             );
 
         }
@@ -1202,9 +1654,9 @@ socket.on(
 );
 
 
-// =====================================================
-// RECIBIR ANSWER
-// =====================================================
+// ============================================================
+// RECIBIR RESPUESTA WEBRTC
+// ============================================================
 
 socket.on(
     "answer",
@@ -1212,47 +1664,110 @@ socket.on(
 
         try {
 
+            console.log(
+                "Respuesta recibida de:",
+                data.from
+            );
+
+
             if (
                 !peerConnection
             ) {
 
+                console.warn(
+                    "No existe una conexión WebRTC activa."
+                );
+
                 return;
 
             }
 
 
+            // ====================================================
+            // ESTADO DE CONEXIÓN
+            // ====================================================
+
+            actualizarEstado(
+                "🟡 Respuesta recibida. Estableciendo conexión...",
+                "conectando"
+            );
+
+
+            // ====================================================
+            // ESTABLECER RESPUESTA REMOTA
+            // ====================================================
+
+            await peerConnection.setRemoteDescription(
+                new RTCSessionDescription(
+                    data.answer
+                )
+            );
+
+
+            console.log(
+                "Respuesta remota establecida."
+            );
+
+
+            // ====================================================
+            // PROCESAR CANDIDATOS ICE PENDIENTES
+            // ====================================================
+
+            await procesarCandidatosPendientes();
+
+
+            console.log(
+                "Candidatos ICE procesados."
+            );
+
+
+            // ====================================================
+            // VERIFICAR SI YA ESTÁ CONECTADO
+            // ====================================================
+
             if (
-                peerConnection.signalingState !==
-                "have-local-offer"
+                peerConnection.connectionState ===
+                "connected"
             ) {
 
                 console.log(
-                    "Answer ignorada. Estado:",
-                    peerConnection.signalingState
+                    "🟢 La conexión ya está establecida."
                 );
 
-                return;
+
+                actualizarEstado(
+                    "🟢 Llamada conectada",
+                    "ocupado"
+                );
+
+
+                actualizarBotones(
+                    "ocupado"
+                );
+
+
+                actualizarEtiquetasLlamada();
 
             }
-
-
-            await peerConnection
-                .setRemoteDescription(
-                    new RTCSessionDescription(
-                        data.answer
-                    )
-                );
-
-
-            await procesarCandidatosPendientes();
 
         }
 
         catch (error) {
 
             console.error(
-                "Error procesando answer:",
+                "Error procesando respuesta:",
                 error
+            );
+
+
+            actualizarEstado(
+                "🔴 Error procesando la respuesta.",
+                "error"
+            );
+
+
+            actualizarBotones(
+                "error"
             );
 
         }
@@ -1260,10 +1775,9 @@ socket.on(
     }
 );
 
-
-// =====================================================
-// RECIBIR ICE CANDIDATE
-// =====================================================
+// ============================================================
+// RECIBIR CANDIDATOS ICE
+// ============================================================
 
 socket.on(
     "ice-candidate",
@@ -1271,10 +1785,21 @@ socket.on(
 
         try {
 
-            if (
-                !peerConnection ||
-                !peerConnection.remoteDescription
-            ) {
+            console.log(
+                "Candidato ICE recibido de:",
+                data.from
+            );
+
+
+            // ====================================================
+            // VERIFICAR QUE EXISTA LA CONEXIÓN
+            // ====================================================
+
+            if (!peerConnection) {
+
+                console.warn(
+                    "No existe una conexión WebRTC para recibir el candidato ICE."
+                );
 
                 candidatosPendientes.push(
                     data.candidate
@@ -1285,19 +1810,51 @@ socket.on(
             }
 
 
-            await peerConnection
-                .addIceCandidate(
-                    new RTCIceCandidate(
-                        data.candidate
-                    )
+            // ====================================================
+            // SI TODAVÍA NO EXISTE DESCRIPCIÓN REMOTA,
+            // GUARDAR EL CANDIDATO PARA PROCESARLO DESPUÉS
+            // ====================================================
+
+            if (
+                !peerConnection.remoteDescription
+            ) {
+
+                console.log(
+                    "Guardando candidato ICE pendiente..."
                 );
+
+
+                candidatosPendientes.push(
+                    data.candidate
+                );
+
+
+                return;
+
+            }
+
+
+            // ====================================================
+            // AGREGAR CANDIDATO ICE
+            // ====================================================
+
+            await peerConnection.addIceCandidate(
+                new RTCIceCandidate(
+                    data.candidate
+                )
+            );
+
+
+            console.log(
+                "Candidato ICE agregado correctamente."
+            );
 
         }
 
         catch (error) {
 
             console.error(
-                "Error agregando ICE:",
+                "Error procesando candidato ICE:",
                 error
             );
 
@@ -1307,76 +1864,581 @@ socket.on(
 );
 
 
-// =====================================================
-// PROCESAR ICE PENDIENTES
-// =====================================================
+// ============================================================
+// SOLICITAR USUARIOS MANUALMENTE
+// ============================================================
 
-async function procesarCandidatosPendientes() {
+socket.on(
+    "usuarios-actuales",
+    (usuarios) => {
 
-    if (
-        !peerConnection
-    ) {
+        usuariosActuales =
+            usuarios || [];
 
-        return;
+
+        mostrarUsuarios(
+            usuariosActuales
+        );
 
     }
+);
 
 
-    for (
-        const candidate
-        of candidatosPendientes
-    ) {
+// ============================================================
+// VERIFICAR CONEXIÓN DEL SOCKET
+// ============================================================
+
+socket.on(
+    "connect_error",
+    (error) => {
+
+        console.error(
+            "Error de conexión con el servidor:",
+            error
+        );
+
+
+        actualizarEstado(
+            "🔴 No fue posible conectar con el servidor.",
+            "error"
+        );
+
+    }
+);
+
+
+// ============================================================
+// SOCKET DESCONECTADO
+// ============================================================
+
+socket.on(
+    "disconnect",
+    (motivo) => {
+
+        console.warn(
+            "Socket desconectado:",
+            motivo
+        );
+
+
+        if (
+            estadoLlamada !== "disponible"
+        ) {
+
+            actualizarEstado(
+                "🟠 Se perdió la conexión con el servidor.",
+                "error"
+            );
+
+        }
+
+        else {
+
+            actualizarEstado(
+                "🟠 Conexión con el servidor perdida.",
+                "error"
+            );
+
+        }
+
+    }
+);
+
+// ============================================================
+// FINALIZAR LLAMADA
+// ============================================================
+
+if (btnFinalizar) {
+
+    btnFinalizar.addEventListener(
+        "click",
+        () => {
+
+            console.log(
+                "Finalizando llamada..."
+            );
+
+
+            // ====================================================
+            // AVISAR AL OTRO USUARIO
+            // ====================================================
+
+            if (usuarioRemoto) {
+
+                socket.emit(
+                    "finalizar-llamada",
+                    {
+
+                        to:
+                            usuarioRemoto
+
+                    }
+                );
+
+            }
+
+
+            // ====================================================
+            // CERRAR CONEXIÓN LOCAL
+            // ====================================================
+
+            cerrarConexion();
+
+
+            actualizarEstado(
+                "🟢 Sistema disponible",
+                "disponible"
+            );
+
+        }
+    );
+
+}
+
+
+// ============================================================
+// RECIBIR FINALIZACIÓN DE LLAMADA
+// ============================================================
+
+socket.on(
+    "llamada-finalizada",
+    (data) => {
+
+        console.log(
+            "La llamada fue finalizada por el otro usuario.",
+            data
+        );
+
+
+        cerrarConexion();
+
+
+        actualizarEstado(
+            "🟢 La llamada ha finalizado.",
+            "disponible"
+        );
+
+
+        actualizarBotones(
+            "disponible"
+        );
+
+
+        socket.emit(
+            "solicitar-usuarios"
+        );
+
+    }
+);
+
+
+// ============================================================
+// CERRAR CONEXIÓN WEBRTC
+// ============================================================
+
+function cerrarConexion() {
+
+    console.log(
+        "Cerrando conexión WebRTC..."
+    );
+
+
+    // ========================================================
+    // CERRAR CANALES DE DATOS Y CONEXIÓN
+    // ========================================================
+
+    if (peerConnection) {
 
         try {
 
-            await peerConnection
-                .addIceCandidate(
-                    new RTCIceCandidate(
-                        candidate
-                    )
+            peerConnection
+                .getSenders()
+                .forEach(
+                    (sender) => {
+
+                        try {
+
+                            if (
+                                sender.track
+                            ) {
+
+                                sender.track.stop();
+
+                            }
+
+                        }
+
+                        catch (error) {
+
+                            console.warn(
+                                "Error deteniendo sender:",
+                                error
+                            );
+
+                        }
+
+                    }
                 );
 
         }
 
         catch (error) {
 
-            console.error(
-                "Error procesando ICE pendiente:",
+            console.warn(
+                "Error procesando los senders:",
                 error
             );
 
         }
 
+
+        try {
+
+            peerConnection.close();
+
+        }
+
+        catch (error) {
+
+            console.warn(
+                "Error cerrando PeerConnection:",
+                error
+            );
+
+        }
+
+
+        peerConnection =
+            null;
+
     }
 
+
+    // ========================================================
+    // DETENER CÁMARA Y MICRÓFONO
+    // ========================================================
+
+    if (streamLocal) {
+
+        streamLocal
+            .getTracks()
+            .forEach(
+                (track) => {
+
+                    try {
+
+                        track.stop();
+
+                    }
+
+                    catch (error) {
+
+                        console.warn(
+                            "Error deteniendo dispositivo:",
+                            error
+                        );
+
+                    }
+
+                }
+            );
+
+
+        streamLocal =
+            null;
+
+    }
+
+
+    // ========================================================
+    // LIMPIAR VIDEO LOCAL
+    // ========================================================
+
+    if (videoLocal) {
+
+        videoLocal.srcObject =
+            null;
+
+    }
+
+
+    // ========================================================
+    // LIMPIAR VIDEO REMOTO
+    // ========================================================
+
+    if (videoRemoto) {
+
+        videoRemoto.srcObject =
+            null;
+
+    }
+
+
+    // ========================================================
+    // LIMPIAR VARIABLES
+    // ========================================================
+
+    usuarioRemoto =
+        null;
 
     candidatosPendientes =
         [];
 
+    rolLlamada =
+        null;
+
+    microfonoActivo =
+        true;
+
+    camaraActiva =
+        true;
+
+
+    // ========================================================
+    // MENSAJES DE VIDEO
+    // ========================================================
+
+    if (mensajeLocal) {
+
+        mensajeLocal.textContent =
+            "Cámara local";
+
+    }
+
+
+    if (mensajeRemoto) {
+
+        mensajeRemoto.textContent =
+            "Esperando conexión";
+
+    }
+
+
+    // ========================================================
+    // ACTUALIZAR INTERFAZ
+    // ========================================================
+
+    actualizarModoVisual();
+
+    actualizarBotones(
+        "disponible"
+    );
+
+
+    console.log(
+        "Conexión WebRTC cerrada correctamente."
+    );
+
 }
 
 
-// =====================================================
-// OBTENER USUARIOS
-// =====================================================
+// ============================================================
+// ACTUALIZAR LISTA DESPUÉS DE FINALIZAR
+// ============================================================
 
-function obtenerUsuarios() {
+socket.on(
+    "usuarios-conectados",
+    (usuarios) => {
 
-    return new Promise(
-        (resolve) => {
+        usuariosActuales =
+            usuarios || [];
 
-            socket.emit(
-                "solicitar-usuarios"
+
+        mostrarUsuarios(
+            usuariosActuales
+        );
+
+    }
+);
+
+// ============================================================
+// CONTROL DEL MICRÓFONO
+// ============================================================
+
+if (btnMicrofono) {
+
+    btnMicrofono.addEventListener(
+        "click",
+        () => {
+
+            if (!streamLocal) {
+
+                console.warn(
+                    "No existe un stream local."
+                );
+
+                return;
+
+            }
+
+
+            const pistasAudio =
+                streamLocal.getAudioTracks();
+
+
+            if (
+                pistasAudio.length === 0
+            ) {
+
+                console.warn(
+                    "No se encontró pista de audio."
+                );
+
+                return;
+
+            }
+
+
+            microfonoActivo =
+                !microfonoActivo;
+
+
+            pistasAudio.forEach(
+                (track) => {
+
+                    track.enabled =
+                        microfonoActivo;
+
+                }
             );
 
 
-            socket.once(
-                "usuarios-actuales",
-                (usuarios) => {
+            if (
+                microfonoActivo
+            ) {
 
-                    resolve(
-                        usuarios
-                    );
+                btnMicrofono.textContent =
+                    "🎤 Micrófono";
+
+                console.log(
+                    "Micrófono activado."
+                );
+
+            }
+
+            else {
+
+                btnMicrofono.textContent =
+                    "🔇 Micrófono";
+
+                console.log(
+                    "Micrófono silenciado."
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+// ============================================================
+// CONTROL DE LA CÁMARA
+// ============================================================
+
+if (btnVideo) {
+
+    btnVideo.addEventListener(
+        "click",
+        () => {
+
+            if (!streamLocal) {
+
+                console.warn(
+                    "No existe un stream local."
+                );
+
+                return;
+
+            }
+
+
+            const pistasVideo =
+                streamLocal.getVideoTracks();
+
+
+            if (
+                pistasVideo.length === 0
+            ) {
+
+                console.warn(
+                    "No se encontró pista de video."
+                );
+
+                return;
+
+            }
+
+
+            camaraActiva =
+                !camaraActiva;
+
+
+            pistasVideo.forEach(
+                (track) => {
+
+                    track.enabled =
+                        camaraActiva;
+
+                }
+            );
+
+
+            if (
+                camaraActiva
+            ) {
+
+                btnVideo.textContent =
+                    "📹 Cámara";
+
+                console.log(
+                    "Cámara activada."
+                );
+
+            }
+
+            else {
+
+                btnVideo.textContent =
+                    "🚫 Cámara";
+
+                console.log(
+                    "Cámara apagada."
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+// ============================================================
+// PRUEBA DE SEÑALIZACIÓN
+// ============================================================
+
+if (btnPrueba) {
+
+    btnPrueba.addEventListener(
+        "click",
+        () => {
+
+            console.log(
+                "Enviando mensaje de prueba..."
+            );
+
+
+            socket.emit(
+                "mensaje-prueba",
+                {
+
+                    mensaje:
+                        "Prueba de señalización desde la plataforma institucional.",
+
+                    fecha:
+                        new Date().toISOString()
 
                 }
             );
@@ -1387,16 +2449,375 @@ function obtenerUsuarios() {
 }
 
 
-// =====================================================
-// FINALIZAR LLAMADA
-// =====================================================
+// ============================================================
+// RECIBIR MENSAJE DE PRUEBA
+// ============================================================
 
-btnFinalizar.addEventListener(
-    "click",
+socket.on(
+    "mensaje-prueba",
+    (data) => {
+
+        console.log(
+            "Mensaje de prueba recibido:",
+            data
+        );
+
+
+        if (mensaje) {
+
+            mensaje.textContent =
+                "🟢 Señalización funcionando correctamente.";
+
+        }
+
+    }
+);
+
+
+// ============================================================
+// MANEJAR CAMBIO DE ESTADO DE LOS USUARIOS
+// ============================================================
+
+socket.on(
+    "usuarios-actuales",
+    (usuarios) => {
+
+        if (
+            Array.isArray(usuarios)
+        ) {
+
+            usuariosActuales =
+                usuarios;
+
+            mostrarUsuarios(
+                usuariosActuales
+            );
+
+        }
+
+    }
+);
+
+
+// ============================================================
+// ACTUALIZAR BOTONES SEGÚN EL STREAM
+// ============================================================
+
+function actualizarEstadoDispositivos() {
+
+    if (!btnMicrofono || !btnVideo) {
+
+        return;
+
+    }
+
+
+    if (!streamLocal) {
+
+        btnMicrofono.disabled =
+            true;
+
+        btnVideo.disabled =
+            true;
+
+        return;
+
+    }
+
+
+    btnMicrofono.disabled =
+        false;
+
+    btnVideo.disabled =
+        false;
+
+
+    if (
+        microfonoActivo
+    ) {
+
+        btnMicrofono.textContent =
+            "🎤 Micrófono";
+
+    }
+
+    else {
+
+        btnMicrofono.textContent =
+            "🔇 Micrófono";
+
+    }
+
+
+    if (
+        camaraActiva
+    ) {
+
+        btnVideo.textContent =
+            "📹 Cámara";
+
+    }
+
+    else {
+
+        btnVideo.textContent =
+            "🚫 Cámara";
+
+    }
+
+}
+
+
+// ============================================================
+// ACTUALIZAR INTERFAZ CUANDO SE ACTIVAN DISPOSITIVOS
+// ============================================================
+
+if (btnCamara) {
+
+    btnCamara.addEventListener(
+        "click",
+        () => {
+
+            setTimeout(
+                () => {
+
+                    actualizarEstadoDispositivos();
+
+                },
+                100
+            );
+
+        }
+    );
+
+}
+
+// ============================================================
+// INICIALIZACIÓN FINAL DE LA APLICACIÓN
+// ============================================================
+
+document.addEventListener(
+    "DOMContentLoaded",
     () => {
 
         console.log(
-            "Finalizando llamada..."
+            "Sistema de videollamada institucional iniciado."
+        );
+
+
+        // ========================================================
+        // ESTADO INICIAL
+        // ========================================================
+
+        estadoLlamada =
+            "disponible";
+
+
+        microfonoActivo =
+            true;
+
+
+        camaraActiva =
+            true;
+
+
+        rolLlamada =
+            null;
+
+
+        usuarioRemoto =
+            null;
+
+
+        candidatosPendientes =
+            [];
+
+
+        // ========================================================
+        // CONFIGURAR VIDEOS
+        // ========================================================
+
+        if (videoLocal) {
+
+            videoLocal.muted =
+                true;
+
+            videoLocal.autoplay =
+                true;
+
+            videoLocal.playsInline =
+                true;
+
+        }
+
+
+        if (videoRemoto) {
+
+            videoRemoto.autoplay =
+                true;
+
+            videoRemoto.playsInline =
+                true;
+
+        }
+
+
+        // ========================================================
+        // ACTUALIZAR INTERFAZ
+        // ========================================================
+
+        actualizarModoVisual();
+
+        actualizarBotones(
+            "disponible"
+        );
+
+        actualizarEstadoDispositivos();
+
+        actualizarEtiquetasLlamada();
+
+
+        // ========================================================
+        // MOSTRAR ESTADO INICIAL
+        // ========================================================
+
+        if (mensaje) {
+
+            mensaje.textContent =
+                "🟢 Sistema disponible";
+
+        }
+
+
+        if (mensajeLocal) {
+
+            mensajeLocal.textContent =
+                "Cámara local";
+
+        }
+
+
+        if (mensajeRemoto) {
+
+            mensajeRemoto.textContent =
+                "Esperando conexión";
+
+        }
+
+
+        // ========================================================
+        // SOLICITAR LISTA DE USUARIOS
+        // ========================================================
+
+        if (
+            socket.connected
+        ) {
+
+            socket.emit(
+                "solicitar-usuarios"
+            );
+
+        }
+
+
+        console.log(
+            "Interfaz inicializada correctamente."
+        );
+
+    }
+);
+
+
+// ============================================================
+// EVITAR QUE EL VIDEO LOCAL REPRODUZCA AUDIO
+// ============================================================
+
+if (videoLocal) {
+
+    videoLocal.addEventListener(
+        "loadedmetadata",
+        () => {
+
+            videoLocal.muted =
+                true;
+
+
+            const resultado =
+                videoLocal.play();
+
+
+            if (
+                resultado &&
+                typeof resultado.catch === "function"
+            ) {
+
+                resultado.catch(
+                    (error) => {
+
+                        console.warn(
+                            "El navegador bloqueó la reproducción automática del video local.",
+                            error
+                        );
+
+                    }
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+// ============================================================
+// INTENTAR REPRODUCIR VIDEO REMOTO
+// ============================================================
+
+if (videoRemoto) {
+
+    videoRemoto.addEventListener(
+        "loadedmetadata",
+        () => {
+
+            const resultado =
+                videoRemoto.play();
+
+
+            if (
+                resultado &&
+                typeof resultado.catch === "function"
+            ) {
+
+                resultado.catch(
+                    (error) => {
+
+                        console.warn(
+                            "El navegador requiere interacción para reproducir el video remoto.",
+                            error
+                        );
+
+                    }
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+// ============================================================
+// MANEJAR CIERRE DE LA PÁGINA
+// ============================================================
+
+window.addEventListener(
+    "beforeunload",
+    () => {
+
+        console.log(
+            "Cerrando página..."
         );
 
 
@@ -1416,210 +2837,39 @@ btnFinalizar.addEventListener(
 
         }
 
-
-        cerrarConexion();
-
-
-        actualizarEstado(
-            "⚫ Llamada finalizada.",
-            "finalizada"
-        );
-
-
-        actualizarBotones(
-            "finalizada"
-        );
-
     }
 );
 
 
-// =====================================================
-// LLAMADA FINALIZADA REMOTAMENTE
-// =====================================================
+// ============================================================
+// ATAJO DE TECLADO
+// ESC = FINALIZAR LLAMADA
+// ============================================================
 
-socket.on(
-    "llamada-finalizada",
-    () => {
-
-        console.log(
-            "El otro usuario finalizó la llamada."
-        );
-
-
-        cerrarConexion();
-
-
-        actualizarEstado(
-            "⚫ El otro usuario finalizó la llamada.",
-            "finalizada"
-        );
-
-
-        actualizarBotones(
-            "finalizada"
-        );
-
-    }
-);
-
-
-// =====================================================
-// CERRAR CONEXIÓN
-// =====================================================
-
-function cerrarConexion() {
-
-    console.log(
-        "Cerrando conexión..."
-    );
-
-
-    if (
-        peerConnection
-    ) {
-
-        peerConnection.close();
-
-        peerConnection =
-            null;
-
-    }
-
-
-    if (
-        streamLocal
-    ) {
-
-        streamLocal
-            .getTracks()
-            .forEach(
-                track =>
-                    track.stop()
-            );
-
-        streamLocal =
-            null;
-
-    }
-
-
-    videoLocal.srcObject =
-        null;
-
-    videoRemoto.srcObject =
-        null;
-
-
-    mensajeLocal.style.display =
-        "flex";
-
-    mensajeRemoto.style.display =
-        "flex";
-
-
-    mensajeLocal.querySelector(
-        "span"
-    ).textContent =
-        "Cámara no disponible";
-
-
-    mensajeRemoto.querySelector(
-        "span"
-    ).textContent =
-        "Esperando conexión...";
-
-
-    usuarioRemoto =
-        null;
-
-
-    candidatosPendientes =
-        [];
-
-
-    microfonoActivo =
-        true;
-
-
-    camaraActiva =
-        true;
-
-
-    btnMicrofono.textContent =
-        "🎤 Micrófono";
-
-
-    btnVideo.textContent =
-        "📹 Cámara";
-
-}
-
-
-// =====================================================
-// CONTROL DEL MICRÓFONO
-// =====================================================
-
-btnMicrofono.addEventListener(
-    "click",
-    () => {
+document.addEventListener(
+    "keydown",
+    (event) => {
 
         if (
-            !streamLocal
+            event.key === "Escape"
         ) {
 
-            console.log(
-                "No existe stream local."
-            );
+            if (
+                estadoLlamada !== "disponible"
+            ) {
 
-            return;
-
-        }
-
-
-        const pistasAudio =
-            streamLocal.getAudioTracks();
+                console.log(
+                    "Finalizando llamada mediante tecla ESC."
+                );
 
 
-        if (
-            pistasAudio.length ===
-            0
-        ) {
+                if (btnFinalizar) {
 
-            console.log(
-                "No existe pista de audio."
-            );
+                    btnFinalizar.click();
 
-            return;
-
-        }
-
-
-        microfonoActivo =
-            !microfonoActivo;
-
-
-        pistasAudio.forEach(
-            track => {
-
-                track.enabled =
-                    microfonoActivo;
+                }
 
             }
-        );
-
-
-        if (
-            microfonoActivo
-        ) {
-
-            btnMicrofono.textContent =
-                "🎤 Micrófono";
-
-        } else {
-
-            btnMicrofono.textContent =
-                "🔇 Micrófono silenciado";
 
         }
 
@@ -1627,126 +2877,22 @@ btnMicrofono.addEventListener(
 );
 
 
-// =====================================================
-// CONTROL DE CÁMARA
-// =====================================================
+// ============================================================
+// FIN DEL SISTEMA
+// ============================================================
 
-btnVideo.addEventListener(
-    "click",
-    () => {
-
-        if (
-            !streamLocal
-        ) {
-
-            console.log(
-                "No existe stream local."
-            );
-
-            return;
-
-        }
-
-
-        const pistasVideo =
-            streamLocal.getVideoTracks();
-
-
-        if (
-            pistasVideo.length ===
-            0
-        ) {
-
-            console.log(
-                "No existe pista de video."
-            );
-
-            return;
-
-        }
-
-
-        camaraActiva =
-            !camaraActiva;
-
-
-        pistasVideo.forEach(
-            track => {
-
-                track.enabled =
-                    camaraActiva;
-
-            }
-        );
-
-
-        if (
-            camaraActiva
-        ) {
-
-            btnVideo.textContent =
-                "📹 Cámara";
-
-        } else {
-
-            btnVideo.textContent =
-                "🚫 Cámara apagada";
-
-        }
-
-    }
+console.log(
+    "================================================="
 );
 
-
-// =====================================================
-// PRUEBA DE SEÑALIZACIÓN
-// =====================================================
-
-btnPrueba.addEventListener(
-    "click",
-    () => {
-
-        socket.emit(
-            "mensaje-prueba",
-            {
-
-                mensaje:
-                    "Hola desde este navegador"
-
-            }
-        );
-
-    }
+console.log(
+    "Videollamada WebRTC - John F. Kennedy"
 );
 
-
-// =====================================================
-// RECIBIR MENSAJE DE PRUEBA
-// =====================================================
-
-socket.on(
-    "mensaje-prueba",
-    (data) => {
-
-        console.log(
-            "Mensaje recibido:",
-            data
-        );
-
-    }
+console.log(
+    "Sistema cargado correctamente."
 );
 
-
-// =====================================================
-// ESTADO INICIAL
-// =====================================================
-
-actualizarBotones(
-    "disponible"
-);
-
-
-actualizarEstado(
-    "🟢 Sistema disponible.",
-    "disponible"
+console.log(
+    "================================================="
 );

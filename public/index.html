@@ -10,8 +10,11 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Videollamada WebRTC</title>
+    <title>
+        Videollamada WebRTC | I.E. John F. Kennedy
+    </title>
 
+    <!-- Hoja de estilos -->
     <link
         rel="stylesheet"
         href="style.css"
@@ -22,308 +25,356 @@
 
 <body>
 
-    <!-- =========================================
-         ENCABEZADO
-    ========================================== -->
 
-    <header class="encabezado">
+    <!-- =====================================================
+         BARRA SUPERIOR INSTITUCIONAL
+    ====================================================== -->
 
-        <div class="titulo-principal">
+    <div class="institutional-line"></div>
 
-            <span class="icono-titulo">
-                📹
-            </span>
 
-            <div>
+    <!-- =====================================================
+         ENCABEZADO INSTITUCIONAL
+    ====================================================== -->
 
-                <h1>
-                    Videollamada WebRTC
-                </h1>
+    <header>
 
-                <p>
-                    Sistema de comunicación en tiempo real
-                </p>
+        <div class="container header-content">
+
+
+            <!-- IDENTIDAD DE LA INSTITUCIÓN -->
+
+            <div class="institution-brand">
+
+                <img
+                    src="https://www.jfkennedy.edu.co/wp-content/uploads/2024/11/escudo.png"
+                    alt="Escudo de la Institución Educativa John F. Kennedy"
+                    class="logo-institucional"
+                >
+
+
+                <div class="institution-text">
+
+                    <div class="institution-name">
+                        Institución Educativa John F. Kennedy
+                    </div>
+
+                    <div class="institution-location">
+                        Puerto Boyacá – Boyacá
+                    </div>
+
+                </div>
 
             </div>
 
-        </div>
 
+            <!-- INFORMACIÓN DEL SISTEMA -->
 
-        <div class="estado-sistema">
+            <div class="system-title">
 
-            <span class="punto-verde"></span>
+                <h1>
+                    Sistema de Comunicación en Tiempo Real
+                </h1>
 
-            Sistema disponible
+                <p>
+                    Plataforma de Videollamada WebRTC
+                </p>
+
+                <div class="system-status">
+                    Sistema disponible
+                </div>
+
+            </div>
+
 
         </div>
 
     </header>
 
 
-
-    <!-- =========================================
+    <!-- =====================================================
          CONTENIDO PRINCIPAL
-    ========================================== -->
+    ====================================================== -->
 
-    <main class="contenido">
+    <main class="container">
 
 
-        <!-- =====================================
-             VIDEOS
-        ====================================== -->
+        <!-- =================================================
+             TÍTULO
+        ================================================== -->
 
-        <section class="contenedor-videos">
-
-
-            <!-- VIDEO LOCAL -->
-
-            <div class="tarjeta-video">
-
-                <div class="cabecera-video">
-
-                    <span>
-                        Mi cámara
-                    </span>
-
-                </div>
-
-
-                <div class="area-video">
-
-                    <video
-                        id="videoLocal"
-                        autoplay
-                        muted
-                        playsinline
-                    ></video>
-
-
-                    <div
-                        id="mensajeLocal"
-                        class="mensaje-video"
-                    >
-
-                        <div class="icono-camara">
-                            📷
-                        </div>
-
-                        <span>
-                            Cámara no disponible
-                        </span>
-
-                    </div>
-
-
-                    <div class="nombre-video">
-
-                        👤 Tú
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- VIDEO REMOTO -->
-
-            <div class="tarjeta-video">
-
-                <div class="cabecera-video">
-
-                    <span>
-                        Cámara remota
-                    </span>
-
-                </div>
-
-
-                <div class="area-video">
-
-                    <video
-                        id="videoRemoto"
-                        autoplay
-                        playsinline
-                    ></video>
-
-
-                    <div
-                        id="mensajeRemoto"
-                        class="mensaje-video"
-                    >
-
-                        <div class="icono-camara">
-                            👤
-                        </div>
-
-                        <span>
-                            Esperando conexión...
-                        </span>
-
-                    </div>
-
-
-                    <div class="nombre-video">
-
-                        👥 Usuario remoto
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- =====================================
-             CONTROLES PRINCIPALES
-        ====================================== -->
-
-        <section class="controles-principales">
-
-
-            <button
-                id="btnCamara"
-                class="btn btn-dispositivos"
-            >
-
-                🎤📷 Activar dispositivos
-
-            </button>
-
-
-            <button
-                id="btnWebRTC"
-                class="btn btn-llamar"
-            >
-
-                📞 Iniciar llamada
-
-            </button>
-
-
-            <button
-                id="btnFinalizar"
-                class="btn btn-finalizar"
-                disabled
-            >
-
-                ❌ Finalizar
-
-            </button>
-
-        </section>
-
-
-
-        <!-- =====================================
-             CONTROLES DE LLAMADA
-        ====================================== -->
-
-        <section
-            id="controlesLlamada"
-            class="controles-llamada"
-        >
-
-            <button
-                id="btnMicrofono"
-                class="btn btn-control"
-                disabled
-            >
-
-                🎤 Micrófono
-
-            </button>
-
-
-            <button
-                id="btnVideo"
-                class="btn btn-control"
-                disabled
-            >
-
-                📹 Cámara
-
-            </button>
-
-        </section>
-
-
-
-        <!-- =====================================
-             ESTADO
-        ====================================== -->
-
-        <section class="panel-estado">
+        <section class="page-heading">
 
             <h2>
-                Estado de la conexión
+                Videollamada institucional
             </h2>
 
-
-            <p id="mensaje">
-
-                <span class="punto-estado"></span>
-
-                🟢 Sistema disponible.
-
+            <p>
+                Sistema de comunicación audiovisual para reuniones
+                y actividades académicas.
             </p>
 
         </section>
 
 
 
-        <!-- =====================================
-             USUARIOS CONECTADOS
-        ====================================== -->
+        <!-- =================================================
+             DISTRIBUCIÓN PRINCIPAL
+        ================================================== -->
 
-        <section
-            id="panelUsuarios"
-            class="panel-usuarios"
-        >
-
-            <div class="titulo-panel">
-
-                <span>
-                    👥
-                </span>
-
-                <h2>
-                    Usuarios conectados
-                </h2>
-
-            </div>
+        <div class="main-layout">
 
 
-            <div id="listaUsuarios">
+            <!-- =================================================
+                 ÁREA DE VIDEOLLAMADA
+            ================================================== -->
 
-                <p class="sin-usuarios">
-                    Cargando usuarios...
-                </p>
+            <section class="card">
 
-            </div>
+
+                <div class="card-header">
+
+                    <h3>
+                        Comunicación audiovisual
+                    </h3>
+
+                    <span>
+                        WebRTC
+                    </span>
+
+                </div>
+
+
+                <!-- =============================================
+                     VIDEOS
+                ============================================== -->
+
+                <div class="videos-container">
+
+
+                    <!-- VIDEO LOCAL -->
+
+                    <div class="video-card">
+
+                        <video
+                            id="videoLocal"
+                            autoplay
+                            muted
+                            playsinline
+                        ></video>
+
+
+                        <div class="video-label local">
+                            Mi cámara
+                        </div>
+
+
+                        <div
+                            id="mensajeLocal"
+                            class="video-message"
+                        >
+
+                            <div>
+
+                                <div
+                                    style="
+                                    font-size: 2.5rem;
+                                    margin-bottom: 10px;
+                                    "
+                                >
+                                    📷
+                                </div>
+
+                                <span>
+                                    Cámara no disponible
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- VIDEO REMOTO -->
+
+                    <div class="video-card">
+
+                        <video
+                            id="videoRemoto"
+                            autoplay
+                            playsinline
+                        ></video>
+
+
+                        <div class="video-label remote">
+                            Cámara remota
+                        </div>
+
+
+                        <div
+                            id="mensajeRemoto"
+                            class="video-message"
+                        >
+
+                            <div>
+
+                                <div
+                                    style="
+                                    font-size: 2.5rem;
+                                    margin-bottom: 10px;
+                                    "
+                                >
+                                    👤
+                                </div>
+
+                                <span>
+                                    Esperando conexión...
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- =============================================
+                     CONTROLES PRINCIPALES
+                ============================================== -->
+
+                <div class="controls">
+
+
+                    <button
+                        id="btnCamara"
+                    >
+                        🎤📷 Activar dispositivos
+                    </button>
+
+
+                    <button
+                        id="btnWebRTC"
+                    >
+                        📞 Iniciar llamada
+                    </button>
+
+
+                    <button
+                        id="btnFinalizar"
+                        disabled
+                    >
+                        ❌ Finalizar
+                    </button>
+
+
+                    <button
+                        id="btnMicrofono"
+                        disabled
+                    >
+                        🎤 Micrófono
+                    </button>
+
+
+                    <button
+                        id="btnVideo"
+                        disabled
+                    >
+                        📹 Cámara
+                    </button>
+
+
+                </div>
+
+
+                <!-- =============================================
+                     ESTADO
+                ============================================== -->
+
+                <div id="mensaje">
+
+                    🟢 Sistema disponible.
+
+                </div>
+
+
+            </section>
+
+
+
+            <!-- =================================================
+                 PANEL DE USUARIOS
+            ================================================== -->
+
+            <aside class="users-panel">
+
+
+                <div class="users-header">
+
+                    <h3>
+                        👥 Usuarios conectados
+                    </h3>
+
+                    <p>
+                        Participantes disponibles en el sistema
+                    </p>
+
+                </div>
+
+
+                <ul id="listaUsuarios">
+
+                    <li>
+                        Cargando usuarios...
+                    </li>
+
+                </ul>
+
+
+            </aside>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             INFORMACIÓN INSTITUCIONAL
+        ================================================== -->
+
+        <section class="institution-info">
+
+            <h3>
+                Institución Educativa John F. Kennedy
+            </h3>
+
+            <p>
+                Sistema académico de comunicación audiovisual
+                desarrollado mediante tecnología WebRTC para
+                facilitar la comunicación en tiempo real.
+            </p>
 
         </section>
 
 
 
-        <!-- =====================================
+        <!-- =================================================
              PRUEBA DE SEÑALIZACIÓN
-        ====================================== -->
+        ================================================== -->
 
-        <div class="zona-prueba">
+        <div class="zona-tecnica">
 
-            <button
-                id="btnPrueba"
-                class="btn btn-prueba"
-            >
+    <button id="btnPrueba">
+        🔧 Prueba técnica de señalización
+    </button>
 
-                🔧 Probar señalización
+        </div>
 
-            </button>
+            
 
         </div>
 
@@ -332,22 +383,89 @@
 
 
 
-    <!-- =========================================
+    <!-- =====================================================
+         PIE DE PÁGINA
+    ====================================================== -->
+
+    <footer>
+
+        <strong>
+            Institución Educativa John F. Kennedy
+        </strong>
+
+        <br>
+
+        Sistema de Videollamada WebRTC
+
+        <br>
+
+        Puerto Boyacá – Boyacá
+
+    </footer>
+
+
+
+    <!-- =====================================================
          SOCKET.IO
-    ========================================== -->
+    ====================================================== -->
 
-    <script
-        src="/socket.io/socket.io.js"
-    ></script>
+<!-- =====================================================
+     VENTANA DE LLAMADA ENTRANTE
+====================================================== -->
+
+<div
+    id="modalLlamada"
+    class="modal-llamada"
+>
+
+    <div class="modal-llamada-contenido">
+
+        <div class="icono-llamada">
+            📞
+        </div>
+
+        <div class="texto-llamada">
+
+            <span class="etiqueta-llamada">
+                LLAMADA ENTRANTE
+            </span>
+
+            <h2 id="nombreLlamante">
+                Usuario 1
+            </h2>
+
+            <p>
+                Desea establecer una comunicación contigo
+            </p>
+
+        </div>
 
 
-    <!-- =========================================
-         JAVASCRIPT
-    ========================================== -->
+        <div class="acciones-llamada">
 
-    <script
-        src="app.js"
-    ></script>
+            <button
+                id="btnAceptarLlamada"
+                class="btn-aceptar-llamada"
+            >
+                ✓ Aceptar
+            </button>
+
+
+            <button
+                id="btnRechazarLlamada"
+                class="btn-rechazar-llamada"
+            >
+                ✕ Rechazar
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+ <script src="/socket.io/socket.io.js"></script>
+    <script src="app.js"></script>
 
 </body>
 
